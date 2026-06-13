@@ -1,8 +1,8 @@
 -- Marketplace Multi Vendor Database Schema
 -- MySQL / MariaDB
 
-CREATE DATABASE IF NOT EXISTS marketplace CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE marketplace;
+
+
 
 -- ============================================================
 -- TABEL: users
