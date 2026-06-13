@@ -159,7 +159,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-4">
-                    <h5 class="text-white"><i class="bi bi-shop"></i> Marketplace</h5>
+                    <h5 class="text-white"><i class="bi bi-shop"></i> Morowalimart</h5>
                     <p class="small">Platform marketplace terpercaya. Belanja online mudah, aman, dan nyaman.</p>
                 </div>
                 <div class="col-md-2 mb-4">
@@ -263,6 +263,18 @@
                 document.querySelectorAll('img[data-src]').forEach(img => imgObserver.observe(img));
             }
         });
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'bi bi-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'bi bi-eye';
+            }
+        }
 
         function updateCartBadge(count) {
             $('#cartBadge').text(count);

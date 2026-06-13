@@ -2,8 +2,8 @@
 <div class="sidebar py-3">
     <?php
     $currentPath = service('uri')->getPath();
-    $isActive = function($path) use ($currentPath) {
-        return str_contains($currentPath, $path) ? 'active' : '';
+    $isActive = function ($path) use ($currentPath) {
+        return strpos($currentPath, $path) !== false ? 'active' : '';
     };
     ?>
 

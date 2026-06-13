@@ -78,7 +78,7 @@ class Auth extends BaseController
         // Regenerate session ID untuk keamanan
         $this->session->regenerate();
 
-        $redirect = $this->session->get('redirect_url') ?: '/';
+        $redirect = $this->session->get('redirect_url') ?: base_url();
         $this->session->remove('redirect_url');
 
         return $this->response->setJSON([

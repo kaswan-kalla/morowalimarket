@@ -3,8 +3,7 @@ $(document).on('submit', '#loginForm', function (e) {
   e.preventDefault();
   $.post(base_url + '/login', $(this).serialize(), function (res) {
     if (res.status) {
-      showToast(res.message, 'success');
-      setTimeout(() => (window.location.href = res.redirect || '/'), 1000);
+      setTimeout(() => (window.location.href = res.redirect || base_url), 500);
     } else {
       showToast(res.message, 'error');
     }

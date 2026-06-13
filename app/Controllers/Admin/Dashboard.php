@@ -25,9 +25,9 @@ class Dashboard extends BaseController
             'total_users'   => $userModel->countByRole(),
             'total_sellers' => $userModel->countByRole('seller'),
             'total_stores'  => $storeModel->countAllResults(),
-            'total_products'=> $productModel->countAllResults(),
+            'total_products' => $productModel->countAllResults(),
             'total_orders'  => $orderModel->countAllResults(),
-            'revenue_total' => $orderModel->select('SUM(total) as rev')->where('status', 'completed')->first()['rev'] ?? 0,
+            'revenue_total' => $orderModel->select('SUM(total_amount) as rev')->where('status', 'completed')->first()['rev'] ?? 0,
         ];
 
         return view('admin/dashboard', $data);

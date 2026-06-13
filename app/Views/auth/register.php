@@ -16,12 +16,22 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" required minlength="6">
+                            <div class="input-group">
+                                <input type="password" name="password" class="form-control" required minlength="6" id="regPassword">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('regPassword', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                             <small class="text-muted">Minimal 6 karakter</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Konfirmasi Password</label>
-                            <input type="password" name="password_confirm" class="form-control" required>
+                            <div class="input-group">
+                                <input type="password" name="password_confirm" class="form-control" required id="regPasswordConfirm">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('regPasswordConfirm', this)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-person-plus me-1"></i> Daftar

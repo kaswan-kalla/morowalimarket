@@ -24,7 +24,7 @@ class App extends BaseConfig
 	 * @var string
 	 */
 	// public $baseURL = '';
-	public $baseURL = 'http://localhost/morowalimarket/public';
+	public $baseURL = 'http://localhost/morowalimart/public';
 
 	/**
 	 * --------------------------------------------------------------------------

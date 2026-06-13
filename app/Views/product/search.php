@@ -59,8 +59,11 @@
                         <div class="col-6 col-md-4 col-lg-3 mb-3">
                             <div class="card h-100 shadow-sm border-0 product-card">
                                 <a href="<?= base_url('produk/' . $p['slug']) ?>">
-                                    <img src="<?= base_url('uploads/products/' . ($p['main_image'] ?? 'default.png')) ?>"
-                                        class="card-img-top lazy" alt="<?= esc($p['name']) ?>" loading="lazy">
+                                    <?php if ($p['main_image']): ?>
+                                        <img src="<?= base_url($p['main_image']) ?>" class="card-img-top" alt="<?= esc($p['name']) ?>" loading="lazy">
+                                    <?php else: ?>
+                                        <div class="img-placeholder card-img-top" style="height:200px;"><i class="bi bi-image"></i></div>
+                                    <?php endif; ?>
                                 </a>
                                 <?php if ($p['discount_price'] > 0): ?>
                                     <span class="badge bg-danger position-absolute top-0 end-0 m-2">

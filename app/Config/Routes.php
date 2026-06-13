@@ -158,11 +158,21 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     // Stores
     $routes->get('stores', 'Admin\Store::index');
     $routes->get('stores/data', 'Admin\Store::data');
+    $routes->get('stores/get/(:num)', 'Admin\Store::get/$1');
+    $routes->get('stores/get-users', 'Admin\Store::getUserOption');
+    $routes->post('stores/store', 'Admin\Store::store');
+    $routes->post('stores/update/(:num)', 'Admin\Store::update/$1');
     $routes->post('stores/toggle', 'Admin\Store::toggle');
+    $routes->post('stores/delete', 'Admin\Store::delete');
 
     // Products
     $routes->get('products', 'Admin\Product::index');
     $routes->get('products/data', 'Admin\Product::data');
+    $routes->get('products/get/(:num)', 'Admin\Product::get/$1');
+    $routes->get('products/get-categories', 'Admin\Product::getCategoryOption');
+    $routes->get('products/get-stores', 'Admin\Product::getStoreOption');
+    $routes->post('products/store', 'Admin\Product::store');
+    $routes->post('products/update/(:num)', 'Admin\Product::update/$1');
     $routes->post('products/toggle', 'Admin\Product::toggle');
     $routes->post('products/delete', 'Admin\Product::delete');
 
