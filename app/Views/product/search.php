@@ -1,7 +1,3 @@
-<?= $this->extend('layouts/header') ?>
-<?= $this->section('title') ?>Cari: <?= esc($query ?? '') ?><?= $this->endSection() ?>
-<?= $this->include('layouts/navbar') ?>
-
 <div class="container my-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -10,7 +6,7 @@
         </ol>
     </nav>
 
-    <h4 class="mb-3">Hasil Pencarian: "<?= esc($query ?? '') ?>"</h4>
+    <h4 class="mb-3">Hasil Pencarian: "<?= esc($search_query ?? '') ?>"</h4>
 
     <div class="row">
         <!-- Filter Sidebar -->
@@ -19,7 +15,7 @@
                 <div class="card-body">
                     <h6 class="fw-bold mb-3">Filter</h6>
                     <form id="filterForm">
-                        <input type="hidden" name="q" value="<?= esc($query ?? '') ?>">
+                        <input type="hidden" name="q" value="<?= esc($search_query ?? '') ?>">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Kategori</label>
                             <select name="category_id" class="form-select form-select-sm">
@@ -64,7 +60,7 @@
                             <div class="card h-100 shadow-sm border-0 product-card">
                                 <a href="<?= base_url('produk/' . $p['slug']) ?>">
                                     <img src="<?= base_url('uploads/products/' . ($p['main_image'] ?? 'default.png')) ?>"
-                                         class="card-img-top lazy" alt="<?= esc($p['name']) ?>" loading="lazy">
+                                        class="card-img-top lazy" alt="<?= esc($p['name']) ?>" loading="lazy">
                                 </a>
                                 <?php if ($p['discount_price'] > 0): ?>
                                     <span class="badge bg-danger position-absolute top-0 end-0 m-2">
@@ -107,16 +103,3 @@
         </div>
     </div>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<?= $this->section('scripts') ?>
-<script>
-$('#filterForm').on('submit', function(e) {
-    e.preventDefault();
-    let params = $(this).serialize();
-    window.location.href = '<?= base_url('search') ?>?' + params;
-});
-</script>
-<?= $this->endSection() ?>

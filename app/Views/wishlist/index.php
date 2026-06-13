@@ -1,18 +1,14 @@
-<?= $this->extend('layouts/header') ?>
-<?= $this->section('title') ?>Wishlist Saya<?= $this->endSection() ?>
-<?= $this->include('layouts/navbar') ?>
-
 <div class="container my-4">
     <h4 class="mb-4"><i class="bi bi-heart"></i> Wishlist Saya</h4>
 
     <div class="row" id="wishlistGrid">
-        <?php if (!empty($wishlist)): ?>
-            <?php foreach ($wishlist as $w): ?>
+        <?php if (!empty($items)): ?>
+            <?php foreach ($items as $w): ?>
                 <div class="col-6 col-md-4 col-lg-3 mb-3" id="wishlist-<?= $w['id'] ?>">
                     <div class="card h-100 shadow-sm border-0 product-card">
                         <a href="<?= base_url('produk/' . $w['slug']) ?>">
                             <img src="<?= base_url('uploads/products/' . ($w['main_image'] ?? 'default.png')) ?>"
-                                 class="card-img-top lazy" alt="<?= esc($w['name']) ?>" loading="lazy">
+                                class="card-img-top lazy" alt="<?= esc($w['name']) ?>" loading="lazy">
                         </a>
                         <div class="card-body p-2">
                             <h6 class="card-title small mb-1">
@@ -39,21 +35,3 @@
         <?php endif ?>
     </div>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<?= $this->section('scripts') ?>
-<script>
-function removeWishlist(id) {
-    $.post('<?= base_url('wishlist/toggle') ?>', { product_id: id }, function(res) {
-        if (res.status) {
-            $('#wishlist-' + id).fadeOut(300, function() { $(this).remove(); });
-            showToast('Dihapus dari wishlist', 'success');
-        } else {
-            showToast(res.message, 'danger');
-        }
-    });
-}
-</script>
-<?= $this->endSection() ?>

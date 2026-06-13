@@ -1,6 +1,3 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
-
 <!-- Hero Section -->
 <div class="bg-primary text-white py-5 mb-4">
     <div class="container">
@@ -55,7 +52,7 @@
                     <?php $price = $p['discount_price'] ?: $p['price']; ?>
                     <div class="card product-card position-relative h-100">
                         <?php if ($p['discount_price']): ?>
-                            <span class="badge-discount">-<?= round((1 - $p['discount_price']/$p['price'])*100) ?>%</span>
+                            <span class="badge-discount">-<?= round((1 - $p['discount_price'] / $p['price']) * 100) ?>%</span>
                         <?php endif; ?>
                         <?php if (is_logged_in()): ?>
                             <button class="btn-wishlist" onclick="toggleWishlist(<?= $p['id'] ?>, this)">
@@ -96,7 +93,7 @@
                     <?php $price = $p['discount_price'] ?: $p['price']; ?>
                     <div class="card product-card position-relative h-100">
                         <?php if ($p['discount_price']): ?>
-                            <span class="badge-discount">-<?= round((1 - $p['discount_price']/$p['price'])*100) ?>%</span>
+                            <span class="badge-discount">-<?= round((1 - $p['discount_price'] / $p['price']) * 100) ?>%</span>
                         <?php endif; ?>
                         <a href="<?= base_url('produk/' . $p['slug']) ?>" class="text-decoration-none">
                             <?php if ($p['main_image']): ?>
@@ -116,16 +113,3 @@
         </div>
     </section>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<script>
-function toggleWishlist(productId, btn) {
-    $.post('<?= base_url('wishlist/toggle') ?>', {product_id: productId}, function(res) {
-        showToast(res.message, 'success');
-        $(btn).find('i').toggleClass('bi-heart bi-heart-fill');
-        $(btn).toggleClass('active');
-    });
-}
-</script>

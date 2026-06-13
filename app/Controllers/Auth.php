@@ -22,7 +22,7 @@ class Auth extends BaseController
     public function login()
     {
         if (is_logged_in()) return redirect()->to('/');
-        return view('auth/login', ['meta_title' => 'Login']);
+        return view('layout/marketplace_content', ['content' => 'auth', 'subview' => 'login', 'meta_title' => 'Login']);
     }
 
     /**
@@ -94,7 +94,7 @@ class Auth extends BaseController
     public function register()
     {
         if (is_logged_in()) return redirect()->to('/');
-        return view('auth/register', ['meta_title' => 'Daftar Akun']);
+        return view('layout/marketplace_content', ['content' => 'auth', 'subview' => 'register', 'meta_title' => 'Daftar Akun']);
     }
 
     /**
@@ -153,7 +153,7 @@ class Auth extends BaseController
      */
     public function forgotPassword()
     {
-        return view('auth/forgot_password', ['meta_title' => 'Lupa Password']);
+        return view('layout/marketplace_content', ['content' => 'auth', 'subview' => 'forgot_password', 'meta_title' => 'Lupa Password']);
     }
 
     /**
@@ -197,7 +197,9 @@ class Auth extends BaseController
             return redirect()->to('/forgot-password')->with('error', 'Token tidak valid atau sudah kadaluarsa');
         }
 
-        return view('auth/reset_password', [
+        return view('layout/marketplace_content', [
+            'content' => 'auth',
+            'subview'    => 'reset_password',
             'meta_title' => 'Reset Password',
             'token'      => $token
         ]);
@@ -218,7 +220,8 @@ class Auth extends BaseController
         $user = $this->userModel->findByResetToken($token);
         if (!$user) {
             return $this->response->setJSON([
-                'status' => false, 'message' => 'Token tidak valid'
+                'status' => false,
+                'message' => 'Token tidak valid'
             ]);
         }
 

@@ -39,6 +39,7 @@ class Product extends BaseController
         ], $limit, $offset);
 
         $data = [
+            'content'    => 'product',
             'meta_title'  => 'Semua Produk',
             'products'    => $result['products'],
             'total'       => $result['total'],
@@ -47,7 +48,7 @@ class Product extends BaseController
             'categories'  => $this->categoryModel->getParents(),
         ];
 
-        return view('product/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**
@@ -61,6 +62,8 @@ class Product extends BaseController
         }
 
         $data = [
+            'content'          => 'product',
+            'subview'             => 'detail',
             'meta_title'       => $product['name'],
             'meta_description' => substr(strip_tags($product['description'] ?? ''), 0, 160),
             'product'          => $product,
@@ -68,13 +71,13 @@ class Product extends BaseController
             'rating'           => $this->reviewModel->getAverageRating($product['id']),
             'reviews'          => $this->reviewModel->getByProduct($product['id'], 5),
             'related'          => $this->productModel->getWithRelations()
-                                ->where('products.category_id', $product['category_id'])
-                                ->where('products.id !=', $product['id'])
-                                ->where('products.is_active', 1)
-                                ->findAll(4),
+                ->where('products.category_id', $product['category_id'])
+                ->where('products.id !=', $product['id'])
+                ->where('products.is_active', 1)
+                ->findAll(4),
         ];
 
-        return view('product/detail', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**
@@ -98,8 +101,10 @@ class Product extends BaseController
         $result = $this->productModel->searchProducts($filters, $limit, $offset);
 
         $data = [
+            'content'      => 'product',
+            'subview'      => 'search',
             'meta_title'  => 'Hasil Pencarian: ' . esc($filters['q']),
-            'search_query'=> $filters['q'],
+            'search_query' => $filters['q'],
             'products'    => $result['products'],
             'total'       => $result['total'],
             'page'        => $page,
@@ -108,7 +113,7 @@ class Product extends BaseController
             'categories'  => $this->categoryModel->getParents(),
         ];
 
-        return view('product/search', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**
@@ -162,6 +167,8 @@ class Product extends BaseController
         ], $limit, $offset);
 
         $data = [
+            'content'    => 'product',
+            'subview'       => 'search',
             'meta_title' => 'Kategori: ' . $category['name'],
             'category'   => $category,
             'products'   => $result['products'],
@@ -171,6 +178,6 @@ class Product extends BaseController
             'categories' => $this->categoryModel->getParents(),
         ];
 
-        return view('product/search', $data);
+        return view('layout/marketplace_content', $data);
     }
 }

@@ -259,15 +259,7 @@ $isShowId = false;
                             </div>
                         </div>
 
-                        <?php if (isAccDirektur() || isWakilDirektur() || isAccManager() || isAdmin() || isRolePurchase()) : ?>
 
-                            <div class="col-12 col-sm-6 col-md-2 mb-2 mb-md-0">
-                                <select id="company" class="form-control text-uppercase">
-                                    <option value="0">DATA PMS</option>
-                                    <option value="pfp" class="text-uppercase">DATA PFP</option>
-                                </select>
-                            </div>
-                        <?php endif; ?>
 
                     </div>
                 </div>

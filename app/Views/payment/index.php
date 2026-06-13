@@ -1,7 +1,3 @@
-<?= $this->extend('layouts/header') ?>
-<?= $this->section('title') ?>Pembayaran<?= $this->endSection() ?>
-<?= $this->include('layouts/navbar') ?>
-
 <div class="container my-4">
     <div class="row justify-content-center">
         <div class="col-lg-6">
@@ -64,15 +60,15 @@
                 </div>
             </div>
 
-            <?php if (!empty($existing_payment)): ?>
+            <?php if (!empty($payment)): ?>
                 <div class="card shadow-sm mt-3">
                     <div class="card-body">
                         <h6 class="fw-bold mb-3">Status Pembayaran</h6>
-                        <span class="badge bg-<?= $existing_payment['status'] == 'verified' ? 'success' : ($existing_payment['status'] == 'rejected' ? 'danger' : 'warning') ?> px-3 py-2">
-                            <?= ucfirst($existing_payment['status']) ?>
+                        <span class="badge bg-<?= $payment['status'] == 'verified' ? 'success' : ($payment['status'] == 'rejected' ? 'danger' : 'warning') ?> px-3 py-2">
+                            <?= ucfirst($payment['status']) ?>
                         </span>
-                        <?php if ($existing_payment['status'] == 'rejected' && !empty($existing_payment['notes'])): ?>
-                            <p class="text-danger mt-2 mb-0"><small>Catatan: <?= esc($existing_payment['notes']) ?></small></p>
+                        <?php if ($payment['status'] == 'rejected' && !empty($payment['notes'])): ?>
+                            <p class="text-danger mt-2 mb-0"><small>Catatan: <?= esc($payment['notes']) ?></small></p>
                         <?php endif ?>
                     </div>
                 </div>
@@ -80,33 +76,3 @@
         </div>
     </div>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<?= $this->section('scripts') ?>
-<script>
-$('input[name="payment_method"]').on('change', function() {
-    let method = $(this).val();
-    $('#selectedMethod').val(method);
-    $('#bankInfo').toggle(method === 'transfer');
-    $('#qrisInfo').toggle(method === 'qris');
-});
-
-$('#paymentForm').on('submit', function(e) {
-    e.preventDefault();
-    $('#btnUploadProof').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Mengupload...');
-    $.ajax({
-        url: '<?= base_url('payment/upload') ?>',
-        method: 'POST',
-        data: new FormData(this),
-        processData: false, contentType: false,
-        success: function(res) {
-            if (res.status) { showToast('Bukti pembayaran diupload!', 'success'); setTimeout(() => location.reload(), 1000); }
-            else { showToast(res.message, 'danger'); $('#btnUploadProof').prop('disabled', false).html('<i class="bi bi-upload"></i> Upload Bukti'); }
-        },
-        error: function() { showToast('Gagal upload', 'danger'); $('#btnUploadProof').prop('disabled', false).html('<i class="bi bi-upload"></i> Upload Bukti'); }
-    });
-});
-</script>
-<?= $this->endSection() ?>

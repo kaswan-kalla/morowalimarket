@@ -1,7 +1,3 @@
-<?= $this->extend('layouts/header') ?>
-<?= $this->section('title') ?>Pesanan Saya<?= $this->endSection() ?>
-<?= $this->include('layouts/navbar') ?>
-
 <div class="container my-4">
     <h4 class="mb-4"><i class="bi bi-receipt"></i> Pesanan Saya</h4>
 
@@ -34,7 +30,7 @@
                             <?php foreach ($o['items'] as $item): ?>
                                 <div class="d-flex align-items-center gap-3 mb-2">
                                     <img src="<?= base_url('uploads/products/' . ($item['image'] ?? 'default.png')) ?>"
-                                         class="rounded" width="60" height="60" style="object-fit:cover">
+                                        class="rounded" width="60" height="60" style="object-fit:cover">
                                     <div class="flex-grow-1">
                                         <p class="mb-0 small fw-semibold"><?= esc($item['product_name']) ?></p>
                                         <small class="text-muted"><?= $item['qty'] ?> x Rp <?= number_format($item['price'], 0, ',', '.') ?></small>
@@ -73,47 +69,3 @@
         <div class="d-flex justify-content-center"><?= $pager->links('default', 'default_full') ?></div>
     <?php endif ?>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<?= $this->section('scripts') ?>
-<script>
-$('#orderTabs .nav-link').on('click', function(e) {
-    e.preventDefault();
-    $('#orderTabs .nav-link').removeClass('active');
-    $(this).addClass('active');
-    let status = $(this).data('status');
-    if (status === 'all') { $('.order-item').show(); }
-    else { $('.order-item').hide(); $('.order-item[data-status="' + status + '"]').show(); }
-});
-
-function cancelOrder(id) {
-    Swal.fire({
-        title: 'Batalkan pesanan?', icon: 'warning', showCancelButton: true,
-        confirmButtonText: 'Ya, batalkan', cancelButtonText: 'Tidak'
-    }).then(result => {
-        if (result.isConfirmed) {
-            $.post('<?= base_url('order/cancel') ?>', { id: id }, function(res) {
-                if (res.status) { showToast('Pesanan dibatalkan', 'success'); location.reload(); }
-                else showToast(res.message, 'danger');
-            });
-        }
-    });
-}
-
-function completeOrder(id) {
-    Swal.fire({
-        title: 'Konfirmasi pesanan selesai?', icon: 'question', showCancelButton: true,
-        confirmButtonText: 'Ya, selesai', cancelButtonText: 'Batal'
-    }).then(result => {
-        if (result.isConfirmed) {
-            $.post('<?= base_url('order/complete') ?>', { id: id }, function(res) {
-                if (res.status) { showToast('Pesanan selesai!', 'success'); location.reload(); }
-                else showToast(res.message, 'danger');
-            });
-        }
-    });
-}
-</script>
-<?= $this->endSection() ?>

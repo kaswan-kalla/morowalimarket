@@ -1,6 +1,3 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
-
 <div class="container py-4">
     <h4 class="fw-bold mb-4"><?= esc($meta_title) ?></h4>
 
@@ -38,7 +35,7 @@
             <div class="col-6 col-md-3">
                 <div class="card product-card position-relative h-100">
                     <?php if ($p['discount_price']): ?>
-                        <span class="badge-discount">-<?= round((1 - $p['discount_price']/$p['price'])*100) ?>%</span>
+                        <span class="badge-discount">-<?= round((1 - $p['discount_price'] / $p['price']) * 100) ?>%</span>
                     <?php endif; ?>
                     <a href="<?= base_url('produk/' . $p['slug']) ?>" class="text-decoration-none">
                         <?php if ($p['main_image']): ?>
@@ -81,22 +78,3 @@
         </nav>
     <?php endif; ?>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<script>
-function applyFilter() {
-    let params = new URLSearchParams(window.location.search);
-    let sort = $('#sortSelect').val();
-    let minPrice = $('#minPrice').val();
-    let maxPrice = $('#maxPrice').val();
-    if (sort) params.set('sort', sort);
-    if (minPrice) params.set('min_price', minPrice); else params.delete('min_price');
-    if (maxPrice) params.set('max_price', maxPrice); else params.delete('max_price');
-    params.set('page', 1);
-    window.location.href = window.location.pathname + '?' + params.toString();
-}
-
-$('#sortSelect').on('change', applyFilter);
-</script>

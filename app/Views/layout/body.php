@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title><?= $judul ?? ''; ?></title>
-    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('asset/apple-touch-icon.png'); ?>">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('asset/favicon-32x32.png'); ?>">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('asset/favicon-16x16.png'); ?>">
+
+    <!-- Favicon -->
+    <link rel="icon" href="<?= base_url('asset/pavicon.ico') ?>" type="image/x-icon">
 
     <!-- CSS -->
     <link href="<?= base_url('asset/css/bootstrap.css'); ?>" rel="stylesheet">

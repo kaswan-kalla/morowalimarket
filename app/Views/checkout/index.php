@@ -1,7 +1,3 @@
-<?= $this->extend('layouts/header') ?>
-<?= $this->section('title') ?>Checkout<?= $this->endSection() ?>
-<?= $this->include('layouts/navbar') ?>
-
 <div class="container my-4">
     <h4 class="mb-4"><i class="bi bi-bag-check"></i> Checkout</h4>
 
@@ -18,7 +14,7 @@
                                 <?php foreach ($addresses as $addr): ?>
                                     <div class="form-check border rounded p-3 mb-2">
                                         <input class="form-check-input" type="radio" name="address_id" value="<?= $addr['id'] ?>"
-                                               <?= ($addr['is_default']) ? 'checked' : '' ?>>
+                                            <?= ($addr['is_default']) ? 'checked' : '' ?>>
                                         <label class="form-check-label w-100">
                                             <strong><?= esc($addr['label']) ?></strong><br>
                                             <small><?= esc($addr['recipient_name']) ?> - <?= esc($addr['phone']) ?></small><br>
@@ -75,7 +71,7 @@
                         <?php foreach ($cart_items as $item): ?>
                             <div class="d-flex align-items-center gap-3 border-bottom pb-2 mb-2">
                                 <img src="<?= base_url('uploads/products/' . ($item['image'] ?? 'default.png')) ?>"
-                                     class="rounded" width="60" height="60" style="object-fit:cover">
+                                    class="rounded" width="60" height="60" style="object-fit:cover">
                                 <div class="flex-grow-1">
                                     <p class="mb-0 fw-semibold small"><?= esc($item['product_name']) ?></p>
                                     <small class="text-muted"><?= $item['qty'] ?> x Rp <?= number_format($item['discount_price'] > 0 ? $item['discount_price'] : $item['price'], 0, ',', '.') ?></small>
@@ -120,72 +116,3 @@
         </div>
     </form>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<?= $this->section('scripts') ?>
-<script>
-let subtotal = <?= $subtotal ?>;
-let discount = 0;
-let shipping = 0;
-
-$('#btnApplyVoucher').on('click', function() {
-    let code = $('#voucherInput').val();
-    if (!code) return;
-    $.post('<?= base_url('checkout/apply-voucher') ?>', { code: code, subtotal: subtotal }, function(res) {
-        if (res.status) {
-            discount = res.data.discount;
-            $('#voucherResult').html('<small class="text-success"><i class="bi bi-check-circle"></i> ' + res.message + '</small>');
-            $('#discountRow').show();
-            $('#discountAmount').text('- ' + formatRupiah(discount));
-            calculateTotal();
-        } else {
-            discount = 0;
-            $('#voucherResult').html('<small class="text-danger"><i class="bi bi-x-circle"></i> ' + res.message + '</small>');
-            $('#discountRow').hide();
-            calculateTotal();
-        }
-    });
-});
-
-$('select[name="courier"]').on('change', function() {
-    // Simulated shipping cost - can be replaced with API call
-    shipping = $(this).val() ? 15000 : 0;
-    $('#shippingCost').text(formatRupiah(shipping));
-    calculateTotal();
-});
-
-function calculateTotal() {
-    let total = subtotal + shipping - discount;
-    $('#grandTotal').text(formatRupiah(Math.max(total, 0)));
-}
-
-$('#checkoutForm').on('submit', function(e) {
-    e.preventDefault();
-    let addressId = $('input[name="address_id"]:checked').val();
-    if (!addressId) { showToast('Pilih alamat pengiriman', 'warning'); return; }
-    
-    $('#btnPlaceOrder').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Memproses...');
-    
-    $.ajax({
-        url: '<?= base_url('checkout/process') ?>',
-        method: 'POST',
-        data: $(this).serialize(),
-        success: function(res) {
-            if (res.status) {
-                showToast('Pesanan berhasil dibuat!', 'success');
-                window.location.href = '<?= base_url('payment/') ?>' + res.data.order_id;
-            } else {
-                showToast(res.message, 'danger');
-                $('#btnPlaceOrder').prop('disabled', false).html('<i class="bi bi-bag-check"></i> Buat Pesanan');
-            }
-        },
-        error: function() {
-            showToast('Terjadi kesalahan', 'danger');
-            $('#btnPlaceOrder').prop('disabled', false).html('<i class="bi bi-bag-check"></i> Buat Pesanan');
-        }
-    });
-});
-</script>
-<?= $this->endSection() ?>

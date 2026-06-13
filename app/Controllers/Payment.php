@@ -31,12 +31,13 @@ class Payment extends BaseController
         $payment = $this->paymentModel->getByOrder($orderId);
 
         $data = [
+            'content'    => 'payment',
             'meta_title' => 'Pembayaran - ' . $order['order_number'],
             'order'      => $order,
             'payment'    => $payment,
         ];
 
-        return view('payment/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**

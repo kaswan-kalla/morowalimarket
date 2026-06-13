@@ -1,5 +1,3 @@
-<?= $this->include('layouts/header') ?>
-
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-5">
@@ -19,20 +17,3 @@
         </div>
     </div>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<script>
-$('#resetForm').on('submit', function(e) {
-    e.preventDefault();
-    $.post('<?= base_url('reset-password') ?>', $(this).serialize(), function(res) {
-        if (res.status) {
-            showToast(res.message, 'success');
-            setTimeout(() => window.location.href = res.redirect || '/login', 1500);
-        } else {
-            showToast(res.message, 'error');
-        }
-    });
-});
-</script>

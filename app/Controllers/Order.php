@@ -42,6 +42,7 @@ class Order extends BaseController
         }
 
         $data = [
+            'content'    => 'order',
             'meta_title' => 'Pesanan Saya',
             'orders'     => $result['orders'],
             'total'      => $result['total'],
@@ -50,7 +51,7 @@ class Order extends BaseController
             'status'     => $status,
         ];
 
-        return view('order/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**
@@ -64,13 +65,15 @@ class Order extends BaseController
         }
 
         $data = [
+            'content'    => 'order',
+            'subview'    => 'detail',
             'meta_title' => 'Detail Pesanan ' . $order['order_number'],
             'order'      => $order,
             'items'      => $this->orderItemModel->getByOrder($id),
             'payment'    => $this->paymentModel->getByOrder($id),
         ];
 
-        return view('order/detail', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**

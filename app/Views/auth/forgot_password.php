@@ -1,5 +1,3 @@
-<?= $this->include('layouts/header') ?>
-
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-5">
@@ -25,15 +23,3 @@
         </div>
     </div>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<script>
-$('#forgotForm').on('submit', function(e) {
-    e.preventDefault();
-    $.post('<?= base_url('forgot-password') ?>', $(this).serialize(), function(res) {
-        showToast(res.message, res.status ? 'success' : 'error');
-    });
-});
-</script>

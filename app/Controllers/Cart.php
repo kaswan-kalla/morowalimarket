@@ -29,12 +29,13 @@ class Cart extends BaseController
     {
         $cart = $this->cartModel->getOrCreate($this->session->get('user_id'));
         $data = [
+            'content'    => 'cart',
             'meta_title' => 'Keranjang Belanja',
             'cart_items' => $this->cartItemModel->getCartItems($cart['id']),
             'subtotal'   => $this->cartItemModel->getSubtotal($cart['id']),
         ];
 
-        return view('cart/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**

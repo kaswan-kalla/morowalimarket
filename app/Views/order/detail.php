@@ -1,7 +1,3 @@
-<?= $this->extend('layouts/header') ?>
-<?= $this->section('title') ?>Detail Pesanan <?= esc($order['order_number']) ?><?= $this->endSection() ?>
-<?= $this->include('layouts/navbar') ?>
-
 <div class="container my-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -35,7 +31,7 @@
                     <?php foreach ($items as $item): ?>
                         <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-3">
                             <img src="<?= base_url('uploads/products/' . ($item['image'] ?? 'default.png')) ?>"
-                                 class="rounded" width="80" height="80" style="object-fit:cover">
+                                class="rounded" width="80" height="80" style="object-fit:cover">
                             <div class="flex-grow-1">
                                 <a href="<?= base_url('produk/' . ($item['product_slug'] ?? '')) ?>" class="text-dark fw-semibold text-decoration-none">
                                     <?= esc($item['product_name']) ?>
@@ -157,31 +153,3 @@
         </div>
     </div>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<?= $this->section('scripts') ?>
-<script>
-function showReviewForm(productId, orderId) {
-    $('#reviewProductId').val(productId);
-    $('#reviewOrderId').val(orderId);
-    new bootstrap.Modal($('#reviewModal')).show();
-}
-
-$('#reviewForm').on('submit', function(e) {
-    e.preventDefault();
-    let formData = new FormData(this);
-    $.ajax({
-        url: '<?= base_url('review/submit') ?>',
-        method: 'POST',
-        data: formData,
-        processData: false, contentType: false,
-        success: function(res) {
-            if (res.status) { showToast('Ulasan dikirim!', 'success'); bootstrap.Modal.getInstance($('#reviewModal')[0]).hide(); }
-            else showToast(res.message, 'danger');
-        }
-    });
-});
-</script>
-<?= $this->endSection() ?>

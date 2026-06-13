@@ -1,13 +1,9 @@
-<?= $this->extend('layouts/header') ?>
-<?= $this->section('title') ?><?= esc($store['name']) ?><?= $this->endSection() ?>
-<?= $this->include('layouts/navbar') ?>
-
 <!-- Store Banner -->
 <div class="bg-primary text-white py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
     <div class="container">
         <div class="d-flex align-items-center gap-4">
             <img src="<?= base_url('uploads/stores/' . ($store['logo'] ?? 'default.png')) ?>"
-                 class="rounded-circle border border-3 border-white" width="100" height="100" style="object-fit:cover">
+                class="rounded-circle border border-3 border-white" width="100" height="100" style="object-fit:cover">
             <div>
                 <h2 class="fw-bold mb-1"><?= esc($store['name']) ?></h2>
                 <p class="mb-0 opacity-75"><?= esc($store['description'] ?? 'Toko Online') ?></p>
@@ -34,7 +30,7 @@
                     <div class="card h-100 shadow-sm border-0 product-card">
                         <a href="<?= base_url('produk/' . $p['slug']) ?>">
                             <img src="<?= base_url('uploads/products/' . ($p['main_image'] ?? 'default.png')) ?>"
-                                 class="card-img-top lazy" alt="<?= esc($p['name']) ?>" loading="lazy">
+                                class="card-img-top lazy" alt="<?= esc($p['name']) ?>" loading="lazy">
                         </a>
                         <?php if ($p['discount_price'] > 0): ?>
                             <span class="badge bg-danger position-absolute top-0 end-0 m-2">
@@ -74,6 +70,3 @@
         <div class="d-flex justify-content-center mt-3"><?= $pager->links('default', 'default_full') ?></div>
     <?php endif ?>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>

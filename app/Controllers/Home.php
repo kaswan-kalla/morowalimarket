@@ -22,12 +22,13 @@ class Home extends BaseController
     public function index()
     {
         $data = [
+            'content'          => 'home',
             'meta_title'       => 'Marketplace - Belanja Online Terpercaya',
             'categories'       => $this->categoryModel->getParents(),
             'latest_products'  => $this->productModel->getWithRelations()->where('products.is_active', 1)->orderBy('products.created_at', 'DESC')->findAll(8),
             'popular_products' => $this->productModel->getWithRelations()->where('products.is_active', 1)->orderBy('products.sold', 'DESC')->findAll(8),
         ];
 
-        return view('home/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 }

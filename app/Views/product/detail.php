@@ -1,6 +1,3 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
-
 <div class="container py-4">
     <div class="row g-4">
         <!-- Gallery -->
@@ -11,15 +8,15 @@
                     <div class="mb-3 text-center">
                         <?php $mainImg = $product['main_image'] ?? null; ?>
                         <img id="mainImage" src="<?= $mainImg ? base_url($mainImg) : 'https://via.placeholder.com/500x500?text=No+Image' ?>"
-                             alt="<?= esc($product['name']) ?>" class="img-fluid rounded" style="max-height:400px;object-fit:contain;">
+                            alt="<?= esc($product['name']) ?>" class="img-fluid rounded" style="max-height:400px;object-fit:contain;">
                     </div>
                     <!-- Thumbnails -->
                     <?php if (!empty($images)): ?>
                         <div class="d-flex gap-2 flex-wrap">
                             <?php foreach ($images as $img): ?>
                                 <img src="<?= base_url($img['image']) ?>" alt="Thumb"
-                                     class="rounded border" style="width:70px;height:70px;object-fit:cover;cursor:pointer;"
-                                     onclick="$('#mainImage').attr('src', '<?= base_url($img['image']) ?>')">
+                                    class="rounded border" style="width:70px;height:70px;object-fit:cover;cursor:pointer;"
+                                    onclick="$('#mainImage').attr('src', '<?= base_url($img['image']) ?>')">
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
@@ -46,7 +43,7 @@
                     <?php $price = $product['discount_price'] ?: $product['price']; ?>
                     <?php if ($product['discount_price']): ?>
                         <span class="price-original fs-5"><?= format_rupiah($product['price']) ?></span>
-                        <span class="badge bg-danger ms-2">-<?= round((1 - $product['discount_price']/$product['price'])*100) ?>%</span>
+                        <span class="badge bg-danger ms-2">-<?= round((1 - $product['discount_price'] / $product['price']) * 100) ?>%</span>
                         <br>
                     <?php endif; ?>
                     <span class="price-current fs-3"><?= format_rupiah($price) ?></span>
@@ -166,32 +163,3 @@
         </div>
     <?php endif; ?>
 </div>
-
-<?= $this->include('layouts/footer') ?>
-<?= $this->include('layouts/scripts') ?>
-
-<script>
-function changeQty(delta) {
-    let input = $('#qty');
-    let val = parseInt(input.val()) + delta;
-    if (val < 1) val = 1;
-    if (val > <?= $product['stock'] ?>) val = <?= $product['stock'] ?>;
-    input.val(val);
-}
-
-function addToCart(productId) {
-    $.post('<?= base_url('cart/add') ?>', {product_id: productId, quantity: $('#qty').val()}, function(res) {
-        if (res.status) {
-            showToast(res.message, 'success');
-            updateCartBadge(res.data.cart_count);
-        } else {
-            showToast(res.message, 'error');
-        }
-    });
-}
-
-function buyNow(productId) {
-    addToCart(productId);
-    setTimeout(() => window.location.href = '<?= base_url('checkout') ?>', 500);
-}
-</script>

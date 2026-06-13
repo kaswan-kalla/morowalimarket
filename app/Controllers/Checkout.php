@@ -23,7 +23,7 @@ class Checkout extends BaseController
         $this->cartModel     = new CartModel();
         $this->cartItemModel = new CartItemModel();
         $this->orderModel    = new OrderModel();
-        $this->orderItemModel= new OrderItemModel();
+        $this->orderItemModel = new OrderItemModel();
         $this->addressModel  = new AddressModel();
         $this->productModel  = new ProductModel();
         $this->voucherModel  = new VoucherModel();
@@ -43,13 +43,14 @@ class Checkout extends BaseController
         }
 
         $data = [
+            'content'    => 'checkout',
             'meta_title' => 'Checkout',
             'cart_items' => $items,
             'addresses'  => $this->addressModel->getByUser($userId),
             'subtotal'   => $this->cartItemModel->getSubtotal($cart['id']),
         ];
 
-        return view('checkout/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**

@@ -19,10 +19,11 @@ class Address extends BaseController
     public function index()
     {
         $data = [
+            'content'    => 'address',
             'meta_title' => 'Alamat Saya',
             'addresses'  => $this->addressModel->getByUser($this->session->get('user_id')),
         ];
-        return view('address/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**

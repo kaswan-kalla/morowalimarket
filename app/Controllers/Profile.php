@@ -19,7 +19,7 @@ class Profile extends BaseController
     public function index()
     {
         $user = $this->userModel->find($this->session->get('user_id'));
-        return view('profile/index', ['meta_title' => 'Profil Saya', 'user' => $user]);
+        return view('layout/marketplace_content', ['content' => 'profile', 'meta_title' => 'Profil Saya', 'user' => $user]);
     }
 
     /**

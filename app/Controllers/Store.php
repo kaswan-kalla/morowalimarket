@@ -30,18 +30,19 @@ class Store extends BaseController
         }
 
         $products = $this->productModel->getWithRelations()
-                    ->where('products.store_id', $store['id'])
-                    ->where('products.is_active', 1)
-                    ->orderBy('products.created_at', 'DESC')
-                    ->findAll(20);
+            ->where('products.store_id', $store['id'])
+            ->where('products.is_active', 1)
+            ->orderBy('products.created_at', 'DESC')
+            ->findAll(20);
 
         $data = [
+            'content'    => 'store',
             'meta_title' => $store['name'],
             'meta_description' => substr($store['description'] ?? '', 0, 160),
             'store'    => $store,
             'products' => $products,
         ];
 
-        return view('store/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 }

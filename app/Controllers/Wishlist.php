@@ -29,6 +29,7 @@ class Wishlist extends BaseController
         $result = $this->wishlistModel->getUserWishlist($userId, $limit, $offset);
 
         $data = [
+            'content'    => 'wishlist',
             'meta_title' => 'Wishlist Saya',
             'items'      => $result['items'],
             'total'      => $result['total'],
@@ -36,7 +37,7 @@ class Wishlist extends BaseController
             'limit'      => $limit,
         ];
 
-        return view('wishlist/index', $data);
+        return view('layout/marketplace_content', $data);
     }
 
     /**
