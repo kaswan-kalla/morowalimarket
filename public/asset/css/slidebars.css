@@ -1,0 +1,321 @@
+#sidebar p {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9em;
+  font-weight: 200;
+  line-height: 1.7em;
+  /* margin-left: 10px; */
+  margin-bottom: -21px;
+  padding: 10px 0;
+  color: #fff;
+  /* padding: 10px; */
+  /* border-bottom: 1px solid #f0eded85; */
+}
+
+.navbar {
+  padding: 15px 10px;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  margin-bottom: 40px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-btn {
+  box-shadow: none;
+  outline: none !important;
+  border: none;
+}
+
+.line {
+  width: 100%;
+  height: 1px;
+  border-bottom: 1px dashed #ddd;
+  margin: 40px 0;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  perspective: 1500px;
+}
+
+#sidebar {
+  min-width: 205px;
+  max-width: 205px;
+  background: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.6s cubic-bezier(0.945, 0.02, 0.27, 0.665);
+  transform-origin: bottom left;
+  background-image: linear-gradient(
+    to right,
+    rgb(139, 139, 139) 90%,
+    rgb(100, 98, 98)
+  );
+  overflow: hidden;
+  /* tambahan */
+  position: sticky;
+  top: 0;
+  z-index: 1500;
+}
+
+
+#sidebar:hover{
+overflow: auto;
+}
+#sidebar.active {
+  margin-left: -205px;
+  transform: rotateY(100deg);
+}
+
+#sidebar .sidebar-header {
+  padding: 10px 0;
+}
+#sidebar .user-name {
+  background-image: linear-gradient(
+    to right,
+    rgb(70, 66, 66) 90%,
+    rgb(37, 37, 37)
+  );
+  padding-bottom: 13px;
+}
+
+#sidebar ul.components {
+  padding: 0;
+  /* border-bottom: 1px solid #47748b; */
+}
+
+#sidebar ul li a {
+  padding: 8px 11px;
+  /* margin-right: 20px; */
+  font-size: 0.92em;
+  display: block;
+}
+
+.top-bar {
+  background: #f5f5f5;
+  border: thin solid #8c87871c;
+}
+
+a,
+a:hover,
+a:focus {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+#sidebar ul li.active > a,
+a[aria-expanded="true"] {
+  color: #fff;
+  /* background: #6d7fcc; */
+}
+
+a[data-toggle="collapse"] {
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+ul ul a {
+  font-size: 0.9em !important;
+  padding-left: 30px !important;
+  /* background: #6d7fcc; */
+}
+
+ul.CTAs {
+  padding: 20px;
+}
+
+ul.CTAs a {
+  text-align: center;
+  font-size: 0.9em !important;
+  display: block;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+a.download {
+  background: #fff;
+  color: #7386d5;
+}
+
+a.article,
+a.article:hover {
+  background: #6d7fcc !important;
+  color: #fff !important;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+#content {
+  width: 100%;
+  padding: 20px;
+  min-height: 100vh;
+  transition: all 0.3s;
+}
+
+#sidebarCollapse {
+  width: 40px;
+  height: 40px;
+  background: #f5f5f5;
+  cursor: pointer;
+  background: linear-gradient(to bottom, #c5c5c5 0%, #5f5f5f 100%);
+  border-color: #474747;
+}
+
+#sidebarCollapse:hover {
+  background: linear-gradient(to bottom, #b0b0b1 0%, #696969 100%);
+}
+
+#sidebarCollapse span {
+  width: 70%;
+  height: 2px;
+  margin: 0 auto;
+  display: block;
+  background: rgb(228, 227, 227);
+  transition: all 0.8s cubic-bezier(0.81, -0.33, 0.345, 1.375);
+  transition-delay: 0.4s;
+}
+
+#sidebarCollapse span:first-of-type {
+  transform: rotate(45deg) translate(2px, 2px);
+}
+
+#sidebarCollapse span:nth-of-type(2) {
+  opacity: 0;
+}
+
+#sidebarCollapse span:last-of-type {
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+#sidebarCollapse.active span {
+  transform: none;
+  opacity: 1;
+  margin: 5px auto;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -205px;
+    transform: rotateY(90deg);
+  }
+
+  #sidebar.active {
+    margin-left: 0;
+    transform: none;
+  }
+
+  #sidebarCollapse span:first-of-type,
+  #sidebarCollapse span:nth-of-type(2),
+  #sidebarCollapse span:last-of-type {
+    transform: none;
+    opacity: 1;
+    margin: 5px auto;
+  }
+
+  #sidebarCollapse.active span {
+    margin: 0 auto;
+  }
+
+  #sidebarCollapse.active span:first-of-type {
+    transform: rotate(45deg) translate(2px, 2px);
+  }
+
+  #sidebarCollapse.active span:nth-of-type(2) {
+    opacity: 0;
+  }
+
+  #sidebarCollapse.active span:last-of-type {
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+}
+
+/* MY CUSTOM -----------------------------------------------------------------------*/
+
+#sidebar .menu-header {
+  width: 100%;
+  margin: 0;
+  font-weight: bold;
+  padding-left: 15px;
+  margin-bottom: 1px;
+  font-size: 0.8rem;
+  color: cornsilk;
+    /* color: rgba(20, 20, 20, 0.801); */
+    /* background: linear-gradient(to bottom, #e3e4e44d 0%, #8a8a8a 100%); */
+    background-image: linear-gradient(to right,
+    rgb(72 72 72) 90%,
+      rgb(0 0 0 / 88%));
+    border-bottom: thin solid rgba(131, 131, 131, 0.73);
+    /* border-radius: 0 8px 8px 0; */
+  cursor: cell;
+  opacity: 0.8;
+}
+
+#sidebar hr {
+  width: 100%;
+  margin: 0px;
+  height: 1px;
+  /* margin-left: 5px; */
+  background: white;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.692) 1%,
+    rgb(255, 237, 198) 80%,
+    rgba(99, 96, 96, 0.836)
+  );
+}
+
+#sidebar .hr-1 {
+  width: 100%;
+  margin-top: 3px;
+}
+#sidebar ul li a:hover {
+  text-decoration: none;
+  transition: all 0.6s;
+  color: rgb(255, 255, 255);
+}
+#sidebar .menu-active {
+  color: gold;
+}
+
+.logout-button {
+  display: block;
+  line-height: 35px;
+  width: 35px;
+  height: 35px;
+  background: #f5f5f5;
+  cursor: pointer;
+  background: linear-gradient(to bottom, #a9acac 0%, #222222 100%);
+}
+
+.logout-button:hover {
+  background: linear-gradient(to bottom, #a9acac 0%, #222222d5 100%);
+}
+.user-divisi {
+  margin-bottom: 1px;
+  padding-right: 2px;
+  margin-left: 30px;
+}
+.user-divisi span {
+  display: block;
+  padding: 0;
+  font-size: 12px;
+  font-style: italic;
+}
+
