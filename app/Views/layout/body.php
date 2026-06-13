@@ -12,18 +12,18 @@
     <link rel="icon" href="<?= base_url('asset/pavicon.ico') ?>" type="image/x-icon">
 
     <!-- CSS -->
-    <link href="<?= base_url('asset/css/bootstrap.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/bootstrap-datepicker3.min.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/slidebars.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/sweetalert2.min.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/jtable/themes/lightcolor/gray/jtable.min.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/jquery-ui.min.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/bootstrapSelect.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/my_style.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/bootstrap-editable.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/jquery-flexdatalist-2.3.0/jquery.flexdatalist.min.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/select2.min.css'); ?>" rel="stylesheet">
-    <link href="<?= base_url('asset/css/photoviewer.min.css'); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/bootstrap.css?v=' . filemtime(FCPATH . 'asset/css/bootstrap.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/bootstrap-datepicker3.min.css?v=' . filemtime(FCPATH . 'asset/css/bootstrap-datepicker3.min.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/slidebars.css?v=' . filemtime(FCPATH . 'asset/css/slidebars.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/sweetalert2.min.css?v=' . filemtime(FCPATH . 'asset/css/sweetalert2.min.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/jtable/themes/lightcolor/gray/jtable.min.css?v=' . filemtime(FCPATH . 'asset/jtable/themes/lightcolor/gray/jtable.min.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/jquery-ui.min.css?v=' . filemtime(FCPATH . 'asset/css/jquery-ui.min.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/bootstrapSelect.css?v=' . filemtime(FCPATH . 'asset/css/bootstrapSelect.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/my_style.css?v=' . filemtime(FCPATH . 'asset/css/my_style.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/bootstrap-editable.css?v=' . filemtime(FCPATH . 'asset/css/bootstrap-editable.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/jquery-flexdatalist-2.3.0/jquery.flexdatalist.min.css?v=' . filemtime(FCPATH . 'asset/jquery-flexdatalist-2.3.0/jquery.flexdatalist.min.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/select2.min.css?v=' . filemtime(FCPATH . 'asset/css/select2.min.css')); ?>" rel="stylesheet">
+    <link href="<?= base_url('asset/css/photoviewer.min.css?v=' . filemtime(FCPATH . 'asset/css/photoviewer.min.css')); ?>" rel="stylesheet">
     <script>
         function base_url(str = '') {
             return "<?= base_url() ?>/" + str;
@@ -91,21 +91,24 @@
     // JS Dinamis berdasarkan $content dan $script
     if (isset($script)) {
         foreach ($script as $s) {
-            echo '<script src="' . base_url("asset/js/view/{$content}/{$s}.js") . '"></script>';
+            $path = "asset/js/view/{$content}/{$s}.js";
+            echo '<script src="' . base_url($path . '?v=' . filemtime(FCPATH . $path)) . '"></script>';
         }
     }
 
     // Main view script
-    echo '<script src="' . base_url("asset/js/view/{$content}.js") . '"></script>';
+    $mainViewPath = "asset/js/view/{$content}.js";
+    echo '<script src="' . base_url($mainViewPath . '?v=' . filemtime(FCPATH . $mainViewPath)) . '"></script>';
 
 
-    echo '<script src="' . base_url("asset/js/my_script.js") . '"></script>';
-    echo '<script src="' . base_url("asset/js/my_test_input.js") . '"></script>';
+    echo '<script src="' . base_url('asset/js/my_script.js?v=' . filemtime(FCPATH . 'asset/js/my_script.js')) . '"></script>';
+    echo '<script src="' . base_url('asset/js/my_test_input.js?v=' . filemtime(FCPATH . 'asset/js/my_test_input.js')) . '"></script>';
 
     // Modal scripts
     if (isset($modal)) {
         foreach ($modal as $m) {
-            echo '<script src="' . base_url("asset/js/modal/{$m}.js") . '"></script>';
+            $path = "asset/js/modal/{$m}.js";
+            echo '<script src="' . base_url($path . '?v=' . filemtime(FCPATH . $path)) . '"></script>';
         }
     }
     ?>
