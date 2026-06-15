@@ -23,8 +23,13 @@ $routes->setAutoRoute(true);
  * ============================================================
  */
 
+// === SURVEY ===
+$routes->get('survey', 'Survey::index');
+$routes->post('survey/submit', 'Survey::submit');
+$routes->get('home', 'Home::index');
+
 // === PUBLIC ROUTES ===
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Survey::index');
 $routes->get('login', 'Auth::login');
 $routes->post('login', 'Auth::loginProcess');
 $routes->get('register', 'Auth::register');
@@ -202,6 +207,10 @@ $routes->group('admin', ['filter' => 'admin'], function ($routes) {
     $routes->post('vouchers/store', 'Admin\Voucher::save');
     $routes->post('vouchers/update/(:num)', 'Admin\Voucher::update/$1');
     $routes->post('vouchers/delete/(:num)', 'Admin\Voucher::delete/$1');
+
+    // Survey
+    $routes->get('survey', 'Admin\Survey::index');
+    $routes->get('survey/data', 'Admin\Survey::data');
 });
 
 /*

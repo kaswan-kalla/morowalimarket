@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Models\SurveyModel;
+
+class Survey extends BaseController
+{
+    protected $surveyModel;
+
+    public function __construct()
+    {
+        $this->surveyModel = new SurveyModel();
+    }
+
+    public function index()
+    {
+        $data = [
+            'content'    => 'survey',
+            'meta_title' => 'Survey Pelanggan',
+        ];
+        return view('layout/marketplace_content', $data);
+    }
+
+    public function submit()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => false, 'message' => 'Invalid request']);
+        }
+
+        $data = [
+            'nama'                => $this->request->getPost('nama'),
+            'alamat'              => $this->request->getPost('alamat'),
+            'pengeluaran_perbulan' => str_replace('.', '', $this->request->getPost('pengeluaran_perbulan')),
+            'status_menikah'       => $this->request->getPost('status_menikah'),
+            'no_wa'               => $this->request->getPost('no_wa'),
+        ];
+
+        if (!$this->surveyModel->insert($data)) {
+            return $this->response->setJSON([
+                'status'  => false,
+                'message' => 'Gagal menyimpan: ' . implode(', ', $this->surveyModel->errors()),
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'  => true,
+            'message' => 'Terima kasih! Data survey berhasil disimpan.',
+        ]);
+    }
+}

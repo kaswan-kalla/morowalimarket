@@ -60,6 +60,9 @@
             <a class="nav-link <?= $isActive('admin/reports/transactions') ?>" href="<?= base_url('admin/reports/transactions') ?>">
                 <i class="bi bi-receipt me-2"></i>Laporan Transaksi
             </a>
+            <a class="nav-link <?= $isActive('admin/survey') ?>" href="<?= base_url('admin/survey') ?>">
+                <i class="bi bi-bar-chart me-2"></i>Data Survey
+            </a>
         </nav>
     <?php endif; ?>
 
