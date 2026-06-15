@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="<?= base_url('/') ?>">
-            <span class="logo-wrap bg-white rounded-2 p-1 d-inline-flex align-items-center justify-content-center" style="width:38px;height:38px;">
+            <span class="logo-wrap bg-white rounded-2 p-1 d-inline-flex align-items-center justify-content-center" style="width:50px;height:50px;">
                 <img src="<?= base_url('asset/img/logo.png') ?>" alt="Morowalimart" height="30" class="m-auto">
             </span>
             <div class="ms-2">
