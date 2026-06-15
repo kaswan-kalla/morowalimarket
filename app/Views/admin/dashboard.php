@@ -90,5 +90,5 @@
     </div>
 </div>
 
-<?= $this->include('layouts/footer') ?>
+
 <?= $this->include('layouts/scripts') ?>

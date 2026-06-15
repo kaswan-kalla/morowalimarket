@@ -283,6 +283,17 @@
         function formatRupiah(angka) {
             return 'Rp ' + new Intl.NumberFormat('id-ID').format(angka);
         }
+
+        // Auto thousand-separator: tambahkan class "auto-separator" pada input
+        $(document).on('input', '.auto-separator', function() {
+            var raw = this.value.replace(/\D/g, '');
+            this.value = raw ? Number(raw).toLocaleString('id-ID') : '';
+        });
+        $(document).on('submit', 'form', function() {
+            $(this).find('.auto-separator').each(function() {
+                this.value = this.value.replace(/\D/g, '');
+            });
+        });
     </script>
 
     <!-- View JS -->

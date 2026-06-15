@@ -136,7 +136,7 @@
     </div>
 </div>
 
-<?= $this->include('layouts/footer') ?>
+
 
 <?= $this->section('scripts') ?>
 <script>

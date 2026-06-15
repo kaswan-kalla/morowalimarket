@@ -45,10 +45,10 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Pengeluaran Per Bulan <span class="text-danger">*</span></label>
+                            <label class="form-label">Pengeluaran kebutuhan rutin bulanan<span class="text-danger"> *</span></label>
                             <div class="input-group">
                                 <span class="input-group-text">Rp</span>
-                                <input type="text" name="pengeluaran_perbulan" class="form-control" placeholder="Contoh: 500000" required>
+                                <input type="text" name="pengeluaran_perbulan" class="form-control auto-separator" placeholder="Contoh: 500.000" required inputmode="numeric">
                             </div>
                         </div>
 
@@ -69,7 +69,7 @@
                         <div class="mb-3 form-check">
                             <input class="form-check-input" type="checkbox" id="siap_member" name="siap_member" value="1">
                             <label class="form-check-label" for="siap_member">
-                                <strong>Insya Allah</strong> siap jadi member
+                                <strong>Insya Allah</strong> siap berbelanja untuk dukung dakwah.
                             </label>
                         </div>
 

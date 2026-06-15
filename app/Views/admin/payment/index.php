@@ -19,18 +19,20 @@
     </div>
 </div>
 
-<?= $this->include('layouts/footer') ?>
+
 <?= $this->include('layouts/scripts') ?>
 
 <?= $this->section('scripts') ?>
 <script>
-let currentStatus = 'pending';
+    let currentStatus = 'pending';
 
-function loadPayments() {
-    $.get('<?= base_url('admin/payments/data') ?>', { status: currentStatus }, function(res) {
-        let html = '';
-        res.data.forEach(function(p) {
-            html += `<div class="card shadow-sm mb-3">
+    function loadPayments() {
+        $.get('<?= base_url('admin/payments/data') ?>', {
+            status: currentStatus
+        }, function(res) {
+            let html = '';
+            res.data.forEach(function(p) {
+                html += `<div class="card shadow-sm mb-3">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-2">
@@ -57,45 +59,67 @@ function loadPayments() {
                     </div>
                 </div>
             </div>`;
-        });
-        $('#paymentList').html(html || '<div class="text-center py-5 text-muted">Tidak ada data</div>');
-    });
-}
-
-function verifyPayment(id, status) {
-    let action = status === 'verified' ? 'memverifikasi' : 'menolak';
-    Swal.fire({
-        title: `${action.charAt(0).toUpperCase() + action.slice(1)} pembayaran?`, icon: 'question',
-        showCancelButton: true, confirmButtonText: 'Ya', cancelButtonText: 'Batal'
-    }).then(r => {
-        if (r.isConfirmed) {
-            let notes = '';
-            if (status === 'rejected') {
-                Swal.fire({ title: 'Alasan penolakan', input: 'text', showCancelButton: true, confirmButtonText: 'Kirim' })
-                .then(r2 => {
-                    if (r2.isConfirmed) {
-                        $.post('<?= base_url('admin/payments/verify') ?>', { id: id, status: status, notes: r2.value }, function(res) {
-                            if (res.status) { showToast('Pembayaran ' + action, 'success'); loadPayments(); } else showToast(res.message, 'danger');
-                        });
-                    }
-                });
-                return;
-            }
-            $.post('<?= base_url('admin/payments/verify') ?>', { id: id, status: status, notes: notes }, function(res) {
-                if (res.status) { showToast('Pembayaran diverifikasi', 'success'); loadPayments(); } else showToast(res.message, 'danger');
             });
-        }
+            $('#paymentList').html(html || '<div class="text-center py-5 text-muted">Tidak ada data</div>');
+        });
+    }
+
+    function verifyPayment(id, status) {
+        let action = status === 'verified' ? 'memverifikasi' : 'menolak';
+        Swal.fire({
+            title: `${action.charAt(0).toUpperCase() + action.slice(1)} pembayaran?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Batal'
+        }).then(r => {
+            if (r.isConfirmed) {
+                let notes = '';
+                if (status === 'rejected') {
+                    Swal.fire({
+                            title: 'Alasan penolakan',
+                            input: 'text',
+                            showCancelButton: true,
+                            confirmButtonText: 'Kirim'
+                        })
+                        .then(r2 => {
+                            if (r2.isConfirmed) {
+                                $.post('<?= base_url('admin/payments/verify') ?>', {
+                                    id: id,
+                                    status: status,
+                                    notes: r2.value
+                                }, function(res) {
+                                    if (res.status) {
+                                        showToast('Pembayaran ' + action, 'success');
+                                        loadPayments();
+                                    } else showToast(res.message, 'danger');
+                                });
+                            }
+                        });
+                    return;
+                }
+                $.post('<?= base_url('admin/payments/verify') ?>', {
+                    id: id,
+                    status: status,
+                    notes: notes
+                }, function(res) {
+                    if (res.status) {
+                        showToast('Pembayaran diverifikasi', 'success');
+                        loadPayments();
+                    } else showToast(res.message, 'danger');
+                });
+            }
+        });
+    }
+
+    $('.nav-tabs .nav-link').on('click', function(e) {
+        e.preventDefault();
+        $('.nav-tabs .nav-link').removeClass('active');
+        $(this).addClass('active');
+        currentStatus = $(this).data('status');
+        loadPayments();
     });
-}
 
-$('.nav-tabs .nav-link').on('click', function(e) {
-    e.preventDefault();
-    $('.nav-tabs .nav-link').removeClass('active');
-    $(this).addClass('active');
-    currentStatus = $(this).data('status');
-    loadPayments();
-});
-
-$(document).ready(loadPayments);
+    $(document).ready(loadPayments);
 </script>
 <?= $this->endSection() ?>

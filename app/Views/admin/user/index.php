@@ -32,17 +32,19 @@
     </div>
 </div>
 
-<?= $this->include('layouts/footer') ?>
+
 <?= $this->include('layouts/scripts') ?>
 
 <?= $this->section('scripts') ?>
 <script>
-function loadUsers() {
-    let search = $('#searchUser').val();
-    $.get('<?= base_url('admin/users/data') ?>', { search: search }, function(res) {
-        let html = '';
-        res.data.forEach(function(u) {
-            html += `<tr>
+    function loadUsers() {
+        let search = $('#searchUser').val();
+        $.get('<?= base_url('admin/users/data') ?>', {
+            search: search
+        }, function(res) {
+            let html = '';
+            res.data.forEach(function(u) {
+                html += `<tr>
                 <td>${u.id}</td>
                 <td>${u.name}</td>
                 <td>${u.email}</td>
@@ -58,35 +60,51 @@ function loadUsers() {
                     </div>
                 </td>
             </tr>`;
-        });
-        $('#userTable tbody').html(html || '<tr><td colspan="7" class="text-center">Tidak ada data</td></tr>');
-    });
-}
-
-function editRole(id, currentRole) {
-    let roles = ['buyer', 'seller', 'admin'];
-    let html = roles.map(r => `<option value="${r}" ${r === currentRole ? 'selected' : ''}>${r}</option>`).join('');
-    Swal.fire({
-        title: 'Ubah Role', input: 'select', inputOptions: Object.fromEntries(roles.map(r => [r, r])),
-        inputValue: currentRole, showCancelButton: true, confirmButtonText: 'Simpan'
-    }).then(result => {
-        if (result.isConfirmed) {
-            $.post('<?= base_url('admin/users/update-role') ?>', { id: id, role: result.value }, function(res) {
-                if (res.status) { showToast('Role diperbarui', 'success'); loadUsers(); }
-                else showToast(res.message, 'danger');
             });
-        }
-    });
-}
+            $('#userTable tbody').html(html || '<tr><td colspan="7" class="text-center">Tidak ada data</td></tr>');
+        });
+    }
 
-function toggleStatus(id) {
-    $.post('<?= base_url('admin/users/toggle-status') ?>', { id: id }, function(res) {
-        if (res.status) { showToast('Status diperbarui', 'success'); loadUsers(); }
-        else showToast(res.message, 'danger');
-    });
-}
+    function editRole(id, currentRole) {
+        let roles = ['buyer', 'seller', 'admin'];
+        let html = roles.map(r => `<option value="${r}" ${r === currentRole ? 'selected' : ''}>${r}</option>`).join('');
+        Swal.fire({
+            title: 'Ubah Role',
+            input: 'select',
+            inputOptions: Object.fromEntries(roles.map(r => [r, r])),
+            inputValue: currentRole,
+            showCancelButton: true,
+            confirmButtonText: 'Simpan'
+        }).then(result => {
+            if (result.isConfirmed) {
+                $.post('<?= base_url('admin/users/update-role') ?>', {
+                    id: id,
+                    role: result.value
+                }, function(res) {
+                    if (res.status) {
+                        showToast('Role diperbarui', 'success');
+                        loadUsers();
+                    } else showToast(res.message, 'danger');
+                });
+            }
+        });
+    }
 
-$('#searchUser').on('keyup', function() { clearTimeout(window.timer); window.timer = setTimeout(loadUsers, 500); });
-$(document).ready(loadUsers);
+    function toggleStatus(id) {
+        $.post('<?= base_url('admin/users/toggle-status') ?>', {
+            id: id
+        }, function(res) {
+            if (res.status) {
+                showToast('Status diperbarui', 'success');
+                loadUsers();
+            } else showToast(res.message, 'danger');
+        });
+    }
+
+    $('#searchUser').on('keyup', function() {
+        clearTimeout(window.timer);
+        window.timer = setTimeout(loadUsers, 500);
+    });
+    $(document).ready(loadUsers);
 </script>
 <?= $this->endSection() ?>

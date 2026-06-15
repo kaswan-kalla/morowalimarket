@@ -1,5 +1,13 @@
+<?php
+
+/** @var string $meta_title */
+/** @var array $products */
+/** @var int $total */
+/** @var int $limit */
+/** @var int $page */
+?>
 <div class="container py-4">
-    <h4 class="fw-bold mb-4"><?= esc($meta_title) ?></h4>
+    <h4 class="fw-bold mb-4"><?= esc($meta_title ?? 'Semua Produk') ?></h4>
 
     <!-- Filter & Sort -->
     <div class="card mb-4">

@@ -776,3 +776,30 @@ function createJTableTwoColumnLayout(data, columns = true) {
     // Distribute fields between columns
   }
 }
+
+/**
+ * Auto thousand-separator untuk input numeric.
+ * Cukup tambahkan class "auto-separator" pada input element.
+ * Format otomatis saat mengetik, strip separator saat submit.
+ */
+function initAutoSeparator() {
+  // Format on input
+  $(document).on('input', '.auto-separator', function () {
+    var raw = this.value.replace(/\D/g, '');
+    this.value = raw ? Number(raw).toLocaleString('id-ID') : '';
+  });
+
+  // Strip separator before form submit
+  $(document).on('submit', 'form', function () {
+    $(this)
+      .find('.auto-separator')
+      .each(function () {
+        this.value = this.value.replace(/\D/g, '');
+      });
+  });
+}
+
+// Auto-init saat DOM ready
+$(function () {
+  initAutoSeparator();
+});
