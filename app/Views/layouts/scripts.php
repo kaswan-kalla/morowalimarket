@@ -68,6 +68,15 @@ $('#searchForm').on('submit', function(e) {
     }
 });
 
+// Mobile search form handler
+$('#searchFormMobile').on('submit', function(e) {
+    e.preventDefault();
+    const query = $('#searchInputMobile').val().trim();
+    if (query) {
+        window.location.href = '<?= base_url('search') ?>?q=' + encodeURIComponent(query);
+    }
+});
+
 // Lazy loading images
 document.addEventListener('DOMContentLoaded', function() {
     if ('IntersectionObserver' in window) {
@@ -90,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Update cart badge
 function updateCartBadge(count) {
     $('#cartBadge').text(count);
+    $('#cartBadgeMobile').text(count);
 }
 
 // Format rupiah
