@@ -102,39 +102,39 @@
 <?= $this->section('scripts') ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-let chartDesa = null;
-let chartStatus = null;
+    let chartDesa = null;
+    let chartStatus = null;
 
-const COLORS = [
-    '#0d6efd', '#198754', '#ffc107', '#dc3545', '#0dcaf0', '#6f42c1',
-    '#fd7e14', '#20c997', '#e83e8c', '#6610f2'
-];
+    const COLORS = [
+        '#0d6efd', '#198754', '#ffc107', '#dc3545', '#0dcaf0', '#6f42c1',
+        '#fd7e14', '#20c997', '#e83e8c', '#6610f2'
+    ];
 
-function refreshData() {
-    $.get('<?= base_url('admin/survey/data') ?>', function(res) {
-        console.log('Survey API response:', res);
-        if (!res.status) return;
+    function refreshData() {
+        $.get('<?= base_url('admin/survey/data') ?>', function(res) {
+            console.log('Survey API response:', res);
+            if (!res.status) return;
 
-        // Stat cards
-        $('#totalResponden').text(res.total);
-        $('#totalDesa').text(res.per_desa.length);
-        $('#avgPengeluaran').text('Rp ' + new Intl.NumberFormat('id-ID').format(res.avg_pengeluaran));
-        $('#totalStatus').text(res.per_status.length + ' kategori');
+            // Stat cards
+            $('#totalResponden').text(res.total);
+            $('#totalDesa').text(res.per_desa.length);
+            $('#avgPengeluaran').text('Rp ' + new Intl.NumberFormat('id-ID').format(res.avg_pengeluaran));
+            $('#totalStatus').text(res.per_status.length + ' kategori');
 
-        // Pie Desa
-        let desaLabels = res.per_desa.map(d => d.alamat);
-        let desaData = res.per_desa.map(d => d.jumlah);
-        renderPieDesa(desaLabels, desaData, res.total);
+            // Pie Desa
+            let desaLabels = res.per_desa.map(d => d.alamat);
+            let desaData = res.per_desa.map(d => d.jumlah);
+            renderPieDesa(desaLabels, desaData, res.total);
 
-        // Pie Status
-        let statusLabels = res.per_status.map(s => s.status_menikah);
-        let statusData = res.per_status.map(s => s.jumlah);
-        renderPieStatus(statusLabels, statusData, res.total);
+            // Pie Status
+            let statusLabels = res.per_status.map(s => s.status_menikah);
+            let statusData = res.per_status.map(s => s.jumlah);
+            renderPieStatus(statusLabels, statusData, res.total);
 
-        // Table
-        let html = '';
-        res.latest.forEach(function(r, i) {
-            html += `<tr>
+            // Table
+            let html = '';
+            res.latest.forEach(function(r, i) {
+                html += `<tr>
                 <td>${i + 1}</td>
                 <td>${escapeHtml(r.nama)}</td>
                 <td>${escapeHtml(r.no_wa)}</td>
@@ -143,101 +143,105 @@ function refreshData() {
                 <td><span class="badge bg-${r.status_menikah === 'Menikah' ? 'primary' : 'secondary'}">${escapeHtml(r.status_menikah)}</span></td>
                 <td>${new Date(r.created_at).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
             </tr>`;
+            });
+            $('#surveyBody').html(html || '<tr><td colspan="7" class="text-center">Belum ada data survey</td></tr>');
+        }).fail(function(xhr) {
+            console.error('Survey API error:', xhr.status, xhr.responseText.substring(0, 500));
+            $('#totalResponden').text('ERR');
+            $('#surveyBody').html('<tr><td colspan="7" class="text-center text-danger">Gagal load data: HTTP ' + xhr.status + '</td></tr>');
         });
-        $('#surveyBody').html(html || '<tr><td colspan="7" class="text-center">Belum ada data survey</td></tr>');
-    }).fail(function(xhr) {
-        console.error('Survey API error:', xhr.status, xhr.responseText.substring(0,500));
-        $('#totalResponden').text('ERR');
-        $('#surveyBody').html('<tr><td colspan="7" class="text-center text-danger">Gagal load data: HTTP ' + xhr.status + '</td></tr>');
-    });
-}
+    }
 
-function renderPieDesa(labels, data, total) {
-    let ctx = document.getElementById('pieDesa').getContext('2d');
-    if (chartDesa) chartDesa.destroy();
-    chartDesa = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: COLORS.slice(0, labels.length),
-            }]
-        },
-        options: {
-            responsive: true,
+    function renderPieDesa(labels, data, total) {
+        let ctx = document.getElementById('pieDesa').getContext('2d');
+        if (chartDesa) chartDesa.destroy();
+        chartDesa = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: COLORS.slice(0, labels.length),
+                }]
+            },
+            options: {
+                responsive: true,
                 maintainAspectRatio: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(ctx) {
-                            let val = ctx.parsed;
-                            let pct = ((val / total) * 100).toFixed(1);
-                            return ctx.label + ': ' + val + ' (' + pct + '%)';
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                let val = ctx.parsed;
+                                let pct = ((val / total) * 100).toFixed(1);
+                                return ctx.label + ': ' + val + ' (' + pct + '%)';
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
 
-    // Custom legend below
-    let html = '<div class="row g-1">';
-    labels.forEach(function(lbl, i) {
-        let pct = ((data[i] / total) * 100).toFixed(1);
-        html += `<div class="col-6"><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:${COLORS[i]}"></span> ${lbl}: <strong>${data[i]}</strong> (${pct}%)</div>`;
-    });
-    html += '</div>';
-    $('#desaLegend').html(html);
-}
+        // Custom legend below
+        let html = '<div class="row g-1">';
+        labels.forEach(function(lbl, i) {
+            let pct = ((data[i] / total) * 100).toFixed(1);
+            html += `<div class="col-6"><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:${COLORS[i]}"></span> ${lbl}: <strong>${data[i]}</strong> (${pct}%)</div>`;
+        });
+        html += '</div>';
+        $('#desaLegend').html(html);
+    }
 
-function renderPieStatus(labels, data, total) {
-    let ctx = document.getElementById('pieStatus').getContext('2d');
-    if (chartStatus) chartStatus.destroy();
-    chartStatus = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: ['#0d6efd', '#6c757d'],
-            }]
-        },
-        options: {
-            responsive: true,
+    function renderPieStatus(labels, data, total) {
+        let ctx = document.getElementById('pieStatus').getContext('2d');
+        if (chartStatus) chartStatus.destroy();
+        chartStatus = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#0d6efd', '#6c757d'],
+                }]
+            },
+            options: {
+                responsive: true,
                 maintainAspectRatio: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(ctx) {
-                            let val = ctx.parsed;
-                            let pct = ((val / total) * 100).toFixed(1);
-                            return ctx.label + ': ' + val + ' (' + pct + '%)';
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                let val = ctx.parsed;
+                                let pct = ((val / total) * 100).toFixed(1);
+                                return ctx.label + ': ' + val + ' (' + pct + '%)';
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
 
-    let html = '<div class="row g-1">';
-    labels.forEach(function(lbl, i) {
-        let pct = ((data[i] / total) * 100).toFixed(1);
-        let bg = i === 0 ? '#0d6efd' : '#6c757d';
-        html += `<div class="col-6"><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:${bg}"></span> ${lbl}: <strong>${data[i]}</strong> (${pct}%)</div>`;
-    });
-    html += '</div>';
-    $('#statusLegend').html(html);
-}
+        let html = '<div class="row g-1">';
+        labels.forEach(function(lbl, i) {
+            let pct = ((data[i] / total) * 100).toFixed(1);
+            let bg = i === 0 ? '#0d6efd' : '#6c757d';
+            html += `<div class="col-6"><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:${bg}"></span> ${lbl}: <strong>${data[i]}</strong> (${pct}%)</div>`;
+        });
+        html += '</div>';
+        $('#statusLegend').html(html);
+    }
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return $('<span>').text(str).html();
-}
+    function escapeHtml(str) {
+        if (!str) return '';
+        return $('<span>').text(str).html();
+    }
 
-$(document).ready(refreshData);
+    $(document).ready(refreshData);
 </script>
 <?= $this->endSection() ?>
 <?= $this->include('layouts/scripts') ?>
