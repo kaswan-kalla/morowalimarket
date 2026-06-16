@@ -39,10 +39,10 @@
     <!-- Products Grid -->
     <div class="row g-3" id="productGrid">
         <?php foreach ($products as $p): ?>
-            <?php $price = $p['discount_price'] ?: $p['price']; ?>
+            <?php $price = $p['discount_price'] > 0 ? $p['discount_price'] : $p['price']; ?>
             <div class="col-6 col-md-3">
                 <div class="card product-card position-relative h-100">
-                    <?php if ($p['discount_price']): ?>
+                    <?php if ($p['discount_price'] > 0): ?>
                         <span class="badge-discount">-<?= round((1 - $p['discount_price'] / $p['price']) * 100) ?>%</span>
                     <?php endif; ?>
                     <a href="<?= base_url('produk/' . $p['slug']) ?>" class="text-decoration-none">
@@ -54,7 +54,7 @@
                         <div class="card-body">
                             <h6 class="card-title text-dark" style="font-size:0.9rem;"><?= esc($p['name']) ?></h6>
                             <div class="price-current"><?= format_rupiah($price) ?></div>
-                            <?php if ($p['discount_price']): ?>
+                            <?php if ($p['discount_price'] > 0): ?>
                                 <div class="price-original"><?= format_rupiah($p['price']) ?></div>
                             <?php endif; ?>
                             <small class="text-muted d-block"><i class="bi bi-shop me-1"></i><?= esc($p['store_name']) ?></small>

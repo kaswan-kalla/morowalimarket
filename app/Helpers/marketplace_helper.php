@@ -122,7 +122,7 @@ if (!function_exists('upload_image')) {
             return null;
         }
 
-        if ($file->getSize('kb') > $maxSize) {
+        if ($file->getSize() / 1024 > $maxSize) {
             return null;
         }
 
