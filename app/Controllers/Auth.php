@@ -135,7 +135,7 @@ class Auth extends BaseController
         return $this->response->setJSON([
             'status'   => true,
             'message'  => 'Registrasi berhasil! Silakan login.',
-            'redirect' => '/login'
+            'redirect' => base_url('login')
         ]);
     }
 
@@ -234,7 +234,7 @@ class Auth extends BaseController
         return $this->response->setJSON([
             'status'   => true,
             'message'  => 'Password berhasil direset! Silakan login.',
-            'redirect' => '/login'
+            'redirect' => base_url('login')
         ]);
     }
 }

@@ -93,7 +93,7 @@ class Product extends BaseController
         return $this->response->setJSON([
             'status'   => true,
             'message'  => 'Produk berhasil ditambahkan',
-            'redirect' => '/seller/produk/edit/' . $productId,
+            'redirect' => base_url('seller/produk/edit/' . $productId),
         ]);
     }
 
@@ -215,7 +215,7 @@ class Product extends BaseController
 
         return $this->response->setJSON([
             'status' => true,
-            'message'=> 'Gambar berhasil diupload',
+            'message' => 'Gambar berhasil diupload',
             'data'   => ['id' => $imageId, 'image' => $imagePath, 'is_main' => $isMain]
         ]);
     }

@@ -10,7 +10,7 @@ $('#btnApplyVoucher').on('click', function () {
   let code = $('#voucherInput').val();
   if (!code) return;
   $.post(
-    base_url + '/checkout/apply-voucher',
+    base_url + 'checkout/apply-voucher',
     { code: code, subtotal: subtotal },
     function (res) {
       if (res.status) {
@@ -38,7 +38,17 @@ $('#btnApplyVoucher').on('click', function () {
 });
 
 $('select[name="courier"]').on('change', function () {
-  shipping = $(this).val() ? 15000 : 0;
+  let val = $(this).val();
+  if (val === 'delivery') {
+    shipping = 15000;
+    $('#courierInfo').text('Ongkos kirim flat Rp 15.000');
+  } else if (val === 'pickup') {
+    shipping = 0;
+    $('#courierInfo').text('Ambil langsung di toko, gratis ongkir');
+  } else {
+    shipping = 0;
+    $('#courierInfo').text('');
+  }
   $('#shippingCost').text(formatRupiah(shipping));
   calculateTotal();
 });
@@ -63,11 +73,54 @@ $('#checkoutForm').on('submit', function (e) {
     );
 
   $.ajax({
-    url: base_url + '/checkout/process',
+    url: base_url + 'checkout/process',
     method: 'POST',
     data: $(this).serialize(),
     success: function (res) {
-      if (res.status) {
+      if (res.status && res.data && res.data.snap_token) {
+        // Buka Snap Popup Midtrans
+        if (typeof snap !== 'undefined') {
+          snap.pay(res.data.snap_token, {
+            onSuccess: function (result) {
+              showToast(
+                'Pembayaran berhasil! Pesanan sedang diproses.',
+                'success',
+              );
+              setTimeout(function () {
+                window.location.href = base_url + 'order/' + res.data.order_id;
+              }, 1500);
+            },
+            onPending: function (result) {
+              showToast(
+                'Pembayaran sedang diproses. Silakan selesaikan pembayaran Anda.',
+                'info',
+              );
+              setTimeout(function () {
+                window.location.href =
+                  base_url + 'payment/' + res.data.order_id;
+              }, 1500);
+            },
+            onError: function (result) {
+              showToast('Pembayaran gagal, silakan coba lagi.', 'danger');
+              window.location.href = base_url + 'payment/' + res.data.order_id;
+            },
+            onClose: function () {
+              showToast(
+                'Anda menutup popup pembayaran. Silakan lanjutkan dari halaman pembayaran.',
+                'warning',
+              );
+              window.location.href = base_url + 'payment/' + res.data.order_id;
+            },
+          });
+        } else {
+          // snap.js tidak tersedia, redirect ke halaman pembayaran
+          showToast(
+            'Pesanan berhasil dibuat! Silakan lanjutkan pembayaran.',
+            'success',
+          );
+          window.location.href = res.redirect;
+        }
+      } else if (res.status) {
         showToast('Pesanan berhasil dibuat!', 'success');
         window.location.href = res.redirect;
       } else {

@@ -40,8 +40,8 @@
             <!-- Price -->
             <div class="card bg-light mb-3">
                 <div class="card-body py-3">
-                    <?php $price = $product['discount_price'] ?: $product['price']; ?>
-                    <?php if ($product['discount_price']): ?>
+                    <?php $price = $product['discount_price'] > 0 ? $product['discount_price'] : $product['price']; ?>
+                    <?php if ($product['discount_price'] > 0): ?>
                         <span class="price-original fs-5"><?= format_rupiah($product['price']) ?></span>
                         <span class="badge bg-danger ms-2">-<?= round((1 - $product['discount_price'] / $product['price']) * 100) ?>%</span>
                         <br>
@@ -143,7 +143,7 @@
         <h5 class="fw-bold mt-4 mb-3">Produk Serupa</h5>
         <div class="row g-3">
             <?php foreach ($related as $r): ?>
-                <?php $rPrice = $r['discount_price'] ?: $r['price']; ?>
+                <?php $rPrice = $r['discount_price'] > 0 ? $r['discount_price'] : $r['price']; ?>
                 <div class="col-6 col-md-3">
                     <div class="card product-card h-100">
                         <a href="<?= base_url('produk/' . $r['slug']) ?>" class="text-decoration-none">

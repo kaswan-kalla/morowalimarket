@@ -9,7 +9,7 @@
     <title><?= $judul ?? ''; ?></title>
 
     <!-- Favicon -->
-    <link rel="icon" href="<?= base_url('asset/pavicon.ico') ?>" type="image/x-icon">
+    <link rel="icon" href="<?= asset_url('asset/pavicon.ico') ?>" type="image/x-icon">
 
     <!-- CSS -->
     <link href="<?= asset_url('asset/css/bootstrap.css'); ?>" rel="stylesheet">

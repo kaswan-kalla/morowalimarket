@@ -1,19 +1,48 @@
-$('input[name="payment_method"]').on('change', function () {
-  let method = $(this).val();
-  $('#selectedMethod').val(method);
-  $('#bankInfo').toggle(method === 'transfer');
-  $('#qrisInfo').toggle(method === 'qris');
+// === Midtrans Snap Pay ===
+$(document).ready(function () {
+  // Tombol bayar Snap — buka popup Midtrans
+  $('#btnSnapPay').on('click', function () {
+    if (typeof snap !== 'undefined' && snapToken) {
+      snap.pay(snapToken, {
+        onSuccess: function (result) {
+          showToast('Pembayaran berhasil! Pesanan sedang diproses.', 'success');
+          setTimeout(function () {
+            window.location.href = base_url + 'order/' + orderId;
+          }, 1500);
+        },
+        onPending: function (result) {
+          showToast(
+            'Pembayaran sedang diproses. Silakan selesaikan pembayaran Anda.',
+            'info',
+          );
+          setTimeout(function () {
+            location.reload();
+          }, 2000);
+        },
+        onError: function (result) {
+          showToast('Pembayaran gagal, silakan coba lagi.', 'danger');
+        },
+        onClose: function () {
+          // Popup ditutup tanpa bayar — tidak reload, tombol tetap tersedia
+        },
+      });
+    } else {
+      showToast('Snap belum siap, silakan refresh halaman.', 'warning');
+    }
+  });
 });
 
+// === Upload Bukti Manual (fallback) ===
 $('#paymentForm').on('submit', function (e) {
   e.preventDefault();
+  if (!$(this).length) return;
   $('#btnUploadProof')
     .prop('disabled', true)
     .html(
       '<span class="spinner-border spinner-border-sm"></span> Mengupload...',
     );
   $.ajax({
-    url: base_url + '/payment/upload',
+    url: base_url + 'payment/upload',
     method: 'POST',
     data: new FormData(this),
     processData: false,

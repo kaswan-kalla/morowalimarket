@@ -1,7 +1,7 @@
 <?php if (isPMS()): ?>
     <div class="row m-4" id="kop-pms">
         <div class="col col-2 mb-2 border p-2">
-            <img width="100%" src="<?= base_url('asset/img/logo.jpg') ?>">
+            <img width="100%" src="<?= asset_url('asset/img/logo.jpg') ?>">
 
         </div>
         <div class="col col-6 mb-2 text-center border d-flex align-items-center justify-content-center text-center">
@@ -21,7 +21,7 @@
 <?php if (isPFP()): ?>
     <div class="row m-4" id="kop-pfp">
         <div class="col col-2 mb-2 p-2 border p-1">
-            <img width="80%" src="<?= base_url('asset/img/logo_pfp.jpg') ?>">
+            <img width="80%" src="<?= asset_url('asset/img/logo_pfp.jpg') ?>">
 
         </div>
         <div class="col col-7 mb-2 text-center border d-flex align-items-center justify-content-center text-center">

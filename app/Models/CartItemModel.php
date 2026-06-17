@@ -25,13 +25,13 @@ class CartItemModel extends Model
      */
     public function getCartItems(int $cartId)
     {
-        return $this->select('cart_items.*, products.name, products.slug, products.price, products.discount_price, products.stock, products.weight, products.main_image, stores.name as store_name, stores.slug as store_slug, stores.id as store_id')
-                    ->join('products', 'products.id = cart_items.product_id')
-                    ->join('stores', 'stores.id = products.store_id')
-                    ->where('cart_items.cart_id', $cartId)
-                    ->where('products.is_active', 1)
-                    ->orderBy('cart_items.created_at', 'DESC')
-                    ->findAll();
+        return $this->select('cart_items.id, cart_items.cart_id, cart_items.product_id, cart_items.qty, cart_items.notes, cart_items.created_at, cart_items.updated_at, products.name as product_name, products.slug as product_slug, products.price, products.discount_price, products.stock, products.weight, products.main_image, stores.name as store_name, stores.slug as store_slug, stores.id as store_id')
+            ->join('products', 'products.id = cart_items.product_id')
+            ->join('stores', 'stores.id = products.store_id')
+            ->where('cart_items.cart_id', $cartId)
+            ->where('products.is_active', 1)
+            ->orderBy('cart_items.created_at', 'DESC')
+            ->findAll();
     }
 
     /**
@@ -40,8 +40,8 @@ class CartItemModel extends Model
     public function findItem(int $cartId, int $productId)
     {
         return $this->where('cart_id', $cartId)
-                    ->where('product_id', $productId)
-                    ->first();
+            ->where('product_id', $productId)
+            ->first();
     }
 
     /**
@@ -50,8 +50,8 @@ class CartItemModel extends Model
     public function countItems(int $cartId)
     {
         return $this->select('SUM(cart_items.qty) as total_qty')
-                    ->where('cart_id', $cartId)
-                    ->first()['total_qty'] ?? 0;
+            ->where('cart_id', $cartId)
+            ->first()['total_qty'] ?? 0;
     }
 
     /**
@@ -60,11 +60,11 @@ class CartItemModel extends Model
     public function getSubtotal(int $cartId)
     {
         $result = $this->select('SUM(
-            cart_items.qty * IFNULL(products.discount_price, products.price)
+            cart_items.qty * CASE WHEN products.discount_price > 0 THEN products.discount_price ELSE products.price END
         ) as subtotal')
-        ->join('products', 'products.id = cart_items.product_id')
-        ->where('cart_items.cart_id', $cartId)
-        ->first();
+            ->join('products', 'products.id = cart_items.product_id')
+            ->where('cart_items.cart_id', $cartId)
+            ->first();
 
         return (float) ($result['subtotal'] ?? 0);
     }

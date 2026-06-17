@@ -30,7 +30,7 @@
                     <h6 class="fw-bold mb-3">Produk Dipesan</h6>
                     <?php foreach ($items as $item): ?>
                         <div class="d-flex align-items-center gap-3 border-bottom pb-3 mb-3">
-                            <img src="<?= base_url('uploads/products/' . ($item['image'] ?? 'default.png')) ?>"
+                            <img src="<?= base_url($item['product_image'] ?? 'uploads/products/default.j') ?>"
                                 class="rounded" width="80" height="80" style="object-fit:cover">
                             <div class="flex-grow-1">
                                 <a href="<?= base_url('produk/' . ($item['product_slug'] ?? '')) ?>" class="text-dark fw-semibold text-decoration-none">
@@ -107,6 +107,29 @@
                     <p class="mb-0"><small class="text-muted">Metode Bayar:</small><br><?= strtoupper(esc($order['payment_method'] ?? '-')) ?></p>
                 </div>
             </div>
+
+            <?php
+            $payDetails = !empty($order['payment_details']) ? json_decode($order['payment_details'], true) : null;
+            ?>
+            <?php if (!empty($payDetails)): ?>
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Detail Pembayaran</h6>
+                        <?php if (!empty($payDetails['va_number'])): ?>
+                            <div class="mb-2">
+                                <small class="text-muted">Nomor BRIVA</small>
+                                <p class="mb-0 fw-bold text-primary fs-5"><?= esc($payDetails['va_number']) ?></p>
+                            </div>
+                        <?php endif; ?>
+                        <?php if (!empty($payDetails['qr_url'])): ?>
+                            <div class="mb-2 text-center">
+                                <small class="text-muted d-block mb-2">Scan QRIS</small>
+                                <img src="<?= esc($payDetails['qr_url']) ?>" class="img-fluid" style="max-width:200px" alt="QRIS">
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <?php if ($order['status'] == 'awaiting_payment'): ?>
                 <a href="<?= base_url('payment/' . $order['id']) ?>" class="btn btn-primary w-100">Bayar Sekarang</a>

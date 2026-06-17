@@ -48,7 +48,7 @@ $isShowId = false;
                     </span>
                 </div>
             <?php else: ?>
-                <img class="d-block m-auto" src="<?= base_url('asset/img/logo-no-bg.png') ?>" width="100" alt="">
+                <img class="d-block m-auto" src="<?= asset_url('asset/img/logo-no-bg.png') ?>" width="100" alt="">
                 <!-- <h6 class='text-center text-dark font-weight-bold m-0'>PMS INVENTORY</h6> -->
             <?php endif; ?>
         </div>

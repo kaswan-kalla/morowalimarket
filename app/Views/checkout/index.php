@@ -34,13 +34,11 @@
                     <div class="card-body">
                         <h6 class="fw-bold mb-3">Jasa Pengiriman</h6>
                         <select name="courier" class="form-select" required>
-                            <option value="">Pilih Kurir</option>
-                            <option value="jne">JNE</option>
-                            <option value="jnt">J&T Express</option>
-                            <option value="sicepat">SiCepat</option>
-                            <option value="anteraja">Anteraja</option>
-                            <option value="pos">POS Indonesia</option>
+                            <option value="">Pilih Pengiriman</option>
+                            <option value="pickup">Ambil Sendiri</option>
+                            <option value="delivery">Diantarkan</option>
                         </select>
+                        <small class="text-muted mt-1 d-block" id="courierInfo"></small>
                     </div>
                 </div>
 
@@ -70,7 +68,7 @@
                         <h6 class="fw-bold mb-3">Produk Dipesan</h6>
                         <?php foreach ($cart_items as $item): ?>
                             <div class="d-flex align-items-center gap-3 border-bottom pb-2 mb-2">
-                                <img src="<?= base_url('uploads/products/' . ($item['image'] ?? 'default.png')) ?>"
+                                <img src="<?= base_url($item['main_image'] ?? 'uploads/products/default.png') ?>"
                                     class="rounded" width="60" height="60" style="object-fit:cover">
                                 <div class="flex-grow-1">
                                     <p class="mb-0 fw-semibold small"><?= esc($item['product_name']) ?></p>

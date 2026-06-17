@@ -8,7 +8,7 @@
     <meta name="description" content="<?= $meta_description ?? 'Marketplace Multi Vendor - Belanja Online Terpercaya' ?>">
 
     <!-- Favicon -->
-    <link rel="icon" href="<?= base_url('asset/pavicon.ico') ?>" type="image/x-icon">
+    <link rel="icon" href="<?= asset_url('asset/pavicon.ico') ?>" type="image/x-icon">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

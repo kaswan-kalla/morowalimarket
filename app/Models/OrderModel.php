@@ -15,13 +15,32 @@ class OrderModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $allowedFields    = [
-        'order_number', 'user_id', 'store_id', 'address_id',
-        'recipient_name', 'phone', 'shipping_address',
-        'courier', 'tracking_number',
-        'subtotal', 'shipping_cost', 'discount_amount', 'voucher_code',
-        'total_amount', 'payment_method',
-        'notes', 'status', 'paid_at', 'shipped_at', 'completed_at',
-        'cancelled_at', 'cancel_reason'
+        'order_number',
+        'invoice_no',
+        'user_id',
+        'store_id',
+        'address_id',
+        'recipient_name',
+        'phone',
+        'shipping_address',
+        'courier',
+        'tracking_number',
+        'subtotal',
+        'shipping_cost',
+        'discount_amount',
+        'voucher_code',
+        'total_amount',
+        'payment_method',
+        'snap_token',
+        'payment_details',
+        'notes',
+        'status',
+        'payment_status',
+        'paid_at',
+        'shipped_at',
+        'completed_at',
+        'cancelled_at',
+        'cancel_reason'
     ];
     protected $useTimestamps    = true;
     protected $dateFormat       = 'datetime';
@@ -35,9 +54,9 @@ class OrderModel extends Model
     public function generateOrderNumber()
     {
         $date = date('Ymd');
-        $last = $this->where('order_number LIKE', "ORD-{$date}-%")
-                     ->orderBy('id', 'DESC')
-                     ->first();
+        $last = $this->like('order_number', "ORD-{$date}-")
+            ->orderBy('id', 'DESC')
+            ->first();
 
         $seq = 1;
         if ($last) {
@@ -54,8 +73,8 @@ class OrderModel extends Model
     public function getWithAddress(int $orderId)
     {
         return $this->select('orders.*, addresses.recipient_name, addresses.phone as address_phone, addresses.address, addresses.city, addresses.province, addresses.postal_code')
-                    ->join('addresses', 'addresses.id = orders.address_id', 'left')
-                    ->find($orderId);
+            ->join('addresses', 'addresses.id = orders.address_id', 'left')
+            ->find($orderId);
     }
 
     /**
@@ -71,7 +90,7 @@ class OrderModel extends Model
         $total = $countBuilder->countAllResults(false);
 
         $orders = $builder->orderBy('created_at', 'DESC')
-                          ->findAll($limit, $offset);
+            ->findAll($limit, $offset);
 
         return ['orders' => $orders, 'total' => $total];
     }
@@ -82,9 +101,9 @@ class OrderModel extends Model
     public function getByStore(int $storeId, string $status = null, int $limit = 10, int $offset = 0)
     {
         $builder = $this->select('orders.*')
-                        ->join('order_items', 'order_items.order_id = orders.id')
-                        ->where('order_items.store_id', $storeId)
-                        ->groupBy('orders.id');
+            ->join('order_items', 'order_items.order_id = orders.id')
+            ->where('order_items.store_id', $storeId)
+            ->groupBy('orders.id');
         if ($status) {
             $builder->where('orders.status', $status);
         }
@@ -92,7 +111,7 @@ class OrderModel extends Model
         $total = $countBuilder->countAllResults(false);
 
         $orders = $builder->orderBy('orders.created_at', 'DESC')
-                          ->findAll($limit, $offset);
+            ->findAll($limit, $offset);
 
         return ['orders' => $orders, 'total' => $total];
     }
@@ -103,9 +122,9 @@ class OrderModel extends Model
     public function getStoreRevenue(int $storeId, string $period = 'month')
     {
         $builder = $this->select('SUM(order_items.subtotal) as revenue')
-                        ->join('order_items', 'order_items.order_id = orders.id')
-                        ->where('order_items.store_id', $storeId)
-                        ->where('orders.status', 'completed');
+            ->join('order_items', 'order_items.order_id = orders.id')
+            ->where('order_items.store_id', $storeId)
+            ->where('orders.status', 'completed');
 
         if ($period === 'month') {
             $builder->where('orders.completed_at >=', date('Y-m-01'));
@@ -123,12 +142,12 @@ class OrderModel extends Model
     public function getSalesChart(int $storeId, int $days = 30)
     {
         return $this->select('DATE(orders.completed_at) as date, SUM(order_items.subtotal) as total')
-                    ->join('order_items', 'order_items.order_id = orders.id')
-                    ->where('order_items.store_id', $storeId)
-                    ->where('orders.status', 'completed')
-                    ->where('orders.completed_at >=', date('Y-m-d', strtotime("-{$days} days")))
-                    ->groupBy('DATE(orders.completed_at)')
-                    ->orderBy('date', 'ASC')
-                    ->findAll();
+            ->join('order_items', 'order_items.order_id = orders.id')
+            ->where('order_items.store_id', $storeId)
+            ->where('orders.status', 'completed')
+            ->where('orders.completed_at >=', date('Y-m-d', strtotime("-{$days} days")))
+            ->groupBy('DATE(orders.completed_at)')
+            ->orderBy('date', 'ASC')
+            ->findAll();
     }
 }

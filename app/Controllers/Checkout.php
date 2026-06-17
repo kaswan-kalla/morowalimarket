@@ -9,6 +9,7 @@ use App\Models\OrderItemModel;
 use App\Models\AddressModel;
 use App\Models\ProductModel;
 use App\Models\VoucherModel;
+use App\Services\MidtransService;
 
 /**
  * Controller Checkout - menggunakan database transaction
@@ -17,6 +18,7 @@ class Checkout extends BaseController
 {
     protected $cartModel, $cartItemModel, $orderModel, $orderItemModel;
     protected $addressModel, $productModel, $voucherModel;
+    protected $midtransService;
 
     public function __construct()
     {
@@ -27,6 +29,7 @@ class Checkout extends BaseController
         $this->addressModel  = new AddressModel();
         $this->productModel  = new ProductModel();
         $this->voucherModel  = new VoucherModel();
+        $this->midtransService = new MidtransService();
     }
 
     /**
@@ -48,6 +51,9 @@ class Checkout extends BaseController
             'cart_items' => $items,
             'addresses'  => $this->addressModel->getByUser($userId),
             'subtotal'   => $this->cartItemModel->getSubtotal($cart['id']),
+            'snapUrl'    => $this->midtransService->getSnapUrl(),
+            'clientKey'  => $this->midtransService->getClientKey(),
+            'snapToken'  => 'preload', // trigger snap.js load di layout
         ];
 
         return view('layout/marketplace_content', $data);
@@ -120,15 +126,17 @@ class Checkout extends BaseController
         // Simpan order items + kurangi stok
         $productIds = [];
         foreach ($items as $item) {
+            $unitPrice = $item['discount_price'] > 0 ? $item['discount_price'] : $item['price'];
             $this->orderItemModel->insert([
                 'order_id'      => $orderId,
                 'product_id'    => $item['product_id'],
                 'store_id'      => $item['store_id'],
-                'product_name'  => $item['name'],
+                'product_name'  => $item['product_name'],
+                'product_slug'  => $item['product_slug'],
                 'product_image' => $item['main_image'],
-                'price'         => $item['discount_price'] ?: $item['price'],
+                'price'         => $unitPrice,
                 'qty'           => $item['qty'],
-                'subtotal'      => $item['qty'] * ($item['discount_price'] ?: $item['price']),
+                'subtotal'      => $item['qty'] * $unitPrice,
             ]);
 
             // Kurangi stok
@@ -152,11 +160,39 @@ class Checkout extends BaseController
 
         $order = $this->orderModel->find($orderId);
 
+        // Generate Snap Token dari Midtrans
+        $snapParams = [
+            'transaction_details' => [
+                'order_id'     => $order['order_number'],
+                'gross_amount' => (int) $order['total_amount'],
+            ],
+            'customer_details' => [
+                'first_name' => $this->session->get('user_name'),
+                'email'      => $this->session->get('user_email'),
+                'phone'      => $address['phone'] ?? '',
+            ],
+            'enabled_payments' => ['bri_va', 'gopay', 'shopeepay', 'qris'],
+            'callbacks' => [
+                'finish' => base_url('order/' . $orderId),
+            ],
+        ];
+
+        $snapResult = $this->midtransService->createSnapToken($snapParams);
+        $snapToken  = $snapResult['token'] ?? null;
+
+        if ($snapToken) {
+            $this->orderModel->update($orderId, ['snap_token' => $snapToken]);
+        }
+
         return $this->response->setJSON([
             'status'   => true,
             'message'  => 'Checkout berhasil!',
-            'redirect' => '/payment/' . $orderId,
-            'data'     => ['order_number' => $order['order_number']]
+            'redirect' => base_url('payment/' . $orderId),
+            'data'     => [
+                'order_id'     => $orderId,
+                'order_number' => $order['order_number'],
+                'snap_token'   => $snapToken,
+            ]
         ]);
     }
 

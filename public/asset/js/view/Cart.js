@@ -10,10 +10,13 @@ function loadCart() {
         let subtotal = price * item.qty;
         totalItems += parseInt(item.qty);
         totalPrice += subtotal;
+        let imgSrc = item.main_image
+          ? base_url + item.main_image
+          : base_url + 'uploads/products/default.jpg';
 
         html += `
                 <div class="border-bottom p-3 d-flex align-items-center gap-3">
-                    <img src="${base_url}uploads/products/${item.image || 'default.png'}" 
+                    <img src="${imgSrc}" 
                          class="rounded" width="80" height="80" style="object-fit:cover">
                     <div class="flex-grow-1">
                         <a href="${base_url}produk/${item.product_slug}" class="text-dark text-decoration-none fw-semibold">
@@ -52,7 +55,7 @@ function updateQty(id, qty) {
   $.ajax({
     url: base_url + '/cart/update',
     method: 'POST',
-    data: { id: id, qty: qty },
+    data: { item_id: id, quantity: qty },
     success: function (res) {
       if (res.status) {
         showToast('Jumlah diperbarui', 'success');
@@ -75,7 +78,7 @@ function removeItem(id) {
       $.ajax({
         url: base_url + '/cart/remove',
         method: 'POST',
-        data: { id: id },
+        data: { item_id: id },
         success: function (res) {
           if (res.status) {
             showToast('Item dihapus', 'success');

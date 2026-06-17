@@ -77,6 +77,7 @@ $routes->group('order', ['filter' => 'auth'], function ($routes) {
     $routes->get('(:num)', 'Order::detail/$1');
     $routes->post('cancel', 'Order::cancel');
     $routes->post('complete', 'Order::complete');
+    $routes->post('reorder', 'Order::reorder');
 });
 
 // === PAYMENT (perlu login) ===
@@ -84,6 +85,9 @@ $routes->group('payment', ['filter' => 'auth'], function ($routes) {
     $routes->get('(:num)', 'Payment::index/$1');
     $routes->post('upload', 'Payment::upload');
 });
+
+// === MIDTRANS WEBHOOK (tanpa auth filter, tanpa CSRF) ===
+$routes->post('payment/notification', 'Payment::notification');
 
 // === REVIEW (perlu login) ===
 $routes->group('review', ['filter' => 'auth'], function ($routes) {

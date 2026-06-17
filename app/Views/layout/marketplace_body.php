@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" href="<?= base_url('asset/pavicon.ico') ?>" type="image/x-icon">
+    <link rel="icon" href="<?= asset_url('asset/pavicon.ico') ?>" type="image/x-icon">
 
     <style>
         :root {
@@ -201,12 +201,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        const base_url = '<?= base_url() ?>';
+        const base_url = '<?= rtrim(base_url(), '/') ?>/';
         const csrfName = '<?= csrf_hash() ? csrf_token() : '' ?>';
         const csrfHash = '<?= csrf_hash() ?>';
 
         $.ajaxSetup({
             dataType: 'json',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
             beforeSend: function() {
                 $('#loadingOverlay').addClass('show');
             },
@@ -298,7 +301,10 @@
 
     <!-- View JS -->
     <?php if (isset($content)): ?>
-        <script src="<?= base_url('asset/js/view/' . ucfirst($content) . '.js') ?>"></script>
+        <?php if (isset($snapToken) && !empty($snapToken)): ?>
+            <script src="<?= $snapUrl ?? '' ?>" data-client-key="<?= $clientKey ?? '' ?>"></script>
+        <?php endif; ?>
+        <script src="<?= asset_url('asset/js/view/' . ucfirst($content) . '.js') ?>"></script>
     <?php endif; ?>
 
     <?= $this->renderSection('scripts') ?>

@@ -3,7 +3,7 @@
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="<?= base_url('/') ?>">
             <span class="logo-wrap bg-white rounded-2 p-1 d-inline-flex align-items-center justify-content-center" style="width:50px;height:50px;">
-                <img src="<?= base_url('asset/img/logo.png') ?>" alt="Morowalimart" height="30" class="m-auto">
+                <img src="<?= asset_url('asset/img/logo.png') ?>" alt="Morowalimart" height="30" class="m-auto">
             </span>
             <div class="ms-2">
                 <div class="fw-bold fs-5" style="margin-bottom:0px;">Morowali<span style="color: #fdc306ff;">mart</span></div>
@@ -40,9 +40,11 @@
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="<?= base_url('cart') ?>">
                             <i class="bi bi-cart3"></i>
-                            <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" id="cartBadge" style="font-size: 0.65rem;">
-                                <?= get_cart_count() ?>
-                            </span>
+                            <?php if (get_cart_count() > 0): ?>
+                                <span class="badge bg-danger rounded-pill position-absolute translate-middle" id="cartBadge" style="font-size: 0.65rem;">
+                                    <?= get_cart_count() ?>
+                                </span>
+                            <?php endif; ?>
                         </a>
                     </li>
 
@@ -148,7 +150,9 @@
                 <li class="nav-item">
                     <a class="nav-link px-3 py-2" href="<?= base_url('cart') ?>">
                         <i class="bi bi-cart3 me-2"></i>Keranjang
-                        <span class="badge bg-danger rounded-pill ms-auto" id="cartBadgeMobile"><?= get_cart_count() ?></span>
+                        <?php if (get_cart_count() > 0): ?>
+                            <span class="badge bg-danger rounded-pill" id="cartBadgeMobile" style="margin-left: 5px; transform: translateY(2px);"><?= get_cart_count() ?></span>
+                        <?php endif; ?>
                     </a>
                 </li>
                 <li class="nav-item">

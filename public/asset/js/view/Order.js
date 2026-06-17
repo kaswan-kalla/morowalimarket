@@ -4,11 +4,27 @@ $('#orderTabs .nav-link').on('click', function (e) {
   $(this).addClass('active');
   let status = $(this).data('status');
   if (status === 'all') {
-    $('.order-item').show();
+    // Sembunyikan order yang sudah dibatalkan dari tab "Semua"
+    $('.order-item').each(function () {
+      if ($(this).data('status') === 'cancelled') {
+        $(this).hide();
+      } else {
+        $(this).show();
+      }
+    });
   } else {
     $('.order-item').hide();
     $('.order-item[data-status="' + status + '"]').show();
   }
+});
+
+// Trigger filter "all" saat pertama load untuk sembunyikan cancelled
+$(document).ready(function () {
+  $('.order-item').each(function () {
+    if ($(this).data('status') === 'cancelled') {
+      $(this).hide();
+    }
+  });
 });
 
 function cancelOrder(id) {
@@ -53,6 +69,31 @@ $('#reviewForm').on('submit', function (e) {
     },
   });
 });
+
+function reorder(id) {
+  Swal.fire({
+    title: 'Pesan ulang semua produk di pesanan ini?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, tambahkan ke keranjang',
+    cancelButtonText: 'Batal',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.post(base_url + '/order/reorder', { id: id }, function (res) {
+        if (res.status) {
+          showToast(res.message, 'success');
+          if (res.redirect) {
+            setTimeout(function () {
+              window.location.href = res.redirect;
+            }, 1500);
+          }
+        } else {
+          showToast(res.message, 'danger');
+        }
+      });
+    }
+  });
+}
 
 function completeOrder(id) {
   Swal.fire({

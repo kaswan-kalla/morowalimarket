@@ -9,6 +9,7 @@
         <li class="nav-item"><a class="nav-link" data-status="processing" href="#">Diproses</a></li>
         <li class="nav-item"><a class="nav-link" data-status="shipped" href="#">Dikirim</a></li>
         <li class="nav-item"><a class="nav-link" data-status="completed" href="#">Selesai</a></li>
+        <li class="nav-item"><a class="nav-link" data-status="cancelled" href="#">Dibatalkan</a></li>
     </ul>
 
     <div id="orderList">
@@ -29,7 +30,7 @@
                         <?php if (!empty($o['items'])): ?>
                             <?php foreach ($o['items'] as $item): ?>
                                 <div class="d-flex align-items-center gap-3 mb-2">
-                                    <img src="<?= base_url('uploads/products/' . ($item['image'] ?? 'default.png')) ?>"
+                                    <img src="<?= base_url($item['product_image'] ?? 'uploads/products/default.jpg') ?>"
                                         class="rounded" width="60" height="60" style="object-fit:cover">
                                     <div class="flex-grow-1">
                                         <p class="mb-0 small fw-semibold"><?= esc($item['product_name']) ?></p>
@@ -51,6 +52,9 @@
                                 <?php endif ?>
                                 <?php if ($o['status'] == 'shipped'): ?>
                                     <button class="btn btn-sm btn-success" onclick="completeOrder(<?= $o['id'] ?>)">Selesai</button>
+                                <?php endif ?>
+                                <?php if ($o['status'] == 'cancelled'): ?>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="reorder(<?= $o['id'] ?>)"><i class="bi bi-arrow-repeat"></i> Pesan Ulang</button>
                                 <?php endif ?>
                             </div>
                         </div>

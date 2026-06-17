@@ -100,8 +100,13 @@
 
     // Update cart badge
     function updateCartBadge(count) {
-        $('#cartBadge').text(count);
-        $('#cartBadgeMobile').text(count);
+        if (count > 0) {
+            $('#cartBadge').text(count).show();
+            $('#cartBadgeMobile').text(count).show();
+        } else {
+            $('#cartBadge').hide();
+            $('#cartBadgeMobile').hide();
+        }
     }
 
     // Format rupiah

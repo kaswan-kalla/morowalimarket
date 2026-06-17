@@ -27,18 +27,32 @@ class Address extends BaseController
     }
 
     /**
-     * Simpan alamat baru/edit (AJAX)
+     * Ambil satu alamat (AJAX)
+     */
+    public function get($id)
+    {
+        if (!$this->request->isAJAX()) return $this->response->setJSON(['status' => false]);
+
+        $address = $this->addressModel->find($id);
+        if (!$address || $address['user_id'] != $this->session->get('user_id')) {
+            return $this->response->setJSON(['status' => false, 'message' => 'Alamat tidak ditemukan']);
+        }
+
+        return $this->response->setJSON(['status' => true, 'data' => $address]);
+    }
+
+    /**
+     * Simpan alamat baru (AJAX)
      */
     public function save()
     {
         if (!$this->request->isAJAX()) return $this->response->setJSON(['status' => false]);
 
         $userId  = $this->session->get('user_id');
-        $id      = (int) $this->request->getPost('id');
-        $isDefault = (int) $this->request->getPost('is_default', 0);
+        $isDefault = $this->request->getPost('is_default') ? 1 : 0;
 
         $rules = [
-            'name'           => 'required|max_length[100]',
+            'label'          => 'required|max_length[100]',
             'recipient_name' => 'required|max_length[100]',
             'phone'          => 'required|max_length[20]',
             'address'        => 'required',
@@ -53,7 +67,7 @@ class Address extends BaseController
 
         $data = [
             'user_id'        => $userId,
-            'name'           => $this->request->getPost('name'),
+            'label'          => $this->request->getPost('label'),
             'recipient_name' => $this->request->getPost('recipient_name'),
             'phone'          => $this->request->getPost('phone'),
             'address'        => $this->request->getPost('address'),
@@ -63,11 +77,56 @@ class Address extends BaseController
             'is_default'     => $isDefault,
         ];
 
-        if ($id > 0) {
-            $this->addressModel->update($id, $data);
-        } else {
-            $id = $this->addressModel->insert($data);
+        $id = $this->addressModel->insert($data);
+
+        if ($isDefault) {
+            $this->addressModel->setDefault($id, $userId);
         }
+
+        return $this->response->setJSON(['status' => true, 'message' => 'Alamat berhasil disimpan']);
+    }
+
+    /**
+     * Update alamat (AJAX)
+     */
+    public function update($id)
+    {
+        if (!$this->request->isAJAX()) return $this->response->setJSON(['status' => false]);
+
+        $address = $this->addressModel->find($id);
+        if (!$address || $address['user_id'] != $this->session->get('user_id')) {
+            return $this->response->setJSON(['status' => false, 'message' => 'Alamat tidak ditemukan']);
+        }
+
+        $userId  = $this->session->get('user_id');
+        $isDefault = $this->request->getPost('is_default') ? 1 : 0;
+
+        $rules = [
+            'label'          => 'required|max_length[100]',
+            'recipient_name' => 'required|max_length[100]',
+            'phone'          => 'required|max_length[20]',
+            'address'        => 'required',
+            'city'           => 'required|max_length[100]',
+            'province'       => 'required|max_length[100]',
+            'postal_code'    => 'required|max_length[10]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON(['status' => false, 'message' => implode('<br>', $this->validator->getErrors())]);
+        }
+
+        $data = [
+            'label'          => $this->request->getPost('label'),
+            'recipient_name' => $this->request->getPost('recipient_name'),
+            'phone'          => $this->request->getPost('phone'),
+            'address'        => $this->request->getPost('address'),
+            'city'           => $this->request->getPost('city'),
+            'province'       => $this->request->getPost('province'),
+            'postal_code'    => $this->request->getPost('postal_code'),
+            'is_default'     => $isDefault,
+        ];
+
+        $this->addressModel->update($id, $data);
 
         if ($isDefault) {
             $this->addressModel->setDefault($id, $userId);

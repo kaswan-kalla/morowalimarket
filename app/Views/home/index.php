@@ -56,9 +56,9 @@
         <div class="row g-3">
             <?php foreach ($latest_products as $p): ?>
                 <div class="col-6 col-md-3">
-                    <?php $price = $p['discount_price'] ?: $p['price']; ?>
+                    <?php $price = $p['discount_price'] > 0 ? $p['discount_price'] : $p['price']; ?>
                     <div class="card product-card position-relative h-100">
-                        <?php if ($p['discount_price']): ?>
+                        <?php if ($p['discount_price'] > 0): ?>
                             <span class="badge-discount">-<?= round((1 - $p['discount_price'] / $p['price']) * 100) ?>%</span>
                         <?php endif; ?>
                         <?php if (is_logged_in()): ?>
@@ -74,7 +74,7 @@
                             <?php endif; ?>
                             <div class="card-body">
                                 <h6 class="card-title text-dark" style="font-size:0.9rem;"><?= esc($p['name']) ?></h6>
-                                <?php if ($p['discount_price']): ?>
+                                <?php if ($p['discount_price'] > 0): ?>
                                     <div class="price-current"><?= format_rupiah($price) ?></div>
                                     <div class="price-original"><?= format_rupiah($p['price']) ?></div>
                                 <?php else: ?>
@@ -97,9 +97,9 @@
         <div class="row g-3">
             <?php foreach ($popular_products as $p): ?>
                 <div class="col-6 col-md-3">
-                    <?php $price = $p['discount_price'] ?: $p['price']; ?>
+                    <?php $price = $p['discount_price'] > 0 ? $p['discount_price'] : $p['price']; ?>
                     <div class="card product-card position-relative h-100">
-                        <?php if ($p['discount_price']): ?>
+                        <?php if ($p['discount_price'] > 0): ?>
                             <span class="badge-discount">-<?= round((1 - $p['discount_price'] / $p['price']) * 100) ?>%</span>
                         <?php endif; ?>
                         <a href="<?= base_url('produk/' . $p['slug']) ?>" class="text-decoration-none">
