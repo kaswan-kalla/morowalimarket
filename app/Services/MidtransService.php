@@ -48,7 +48,8 @@ class MidtransService
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 30,
-            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
         ]);
 
         $response = curl_exec($ch);
@@ -63,7 +64,7 @@ class MidtransService
 
         $result = json_decode($response, true);
 
-        if ($httpCode !== 201 || !isset($result['token'])) {
+        if ((int) $httpCode !== 201 || !isset($result['token'])) {
             $errorMsg = $result['error_messages'] ?? ($result['status_message'] ?? 'Unknown error');
             log_message('error', 'Midtrans Snap API error [' . $httpCode . ']: ' . json_encode($errorMsg));
             return null;
@@ -132,7 +133,8 @@ class MidtransService
             ],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 15,
-            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
         ]);
 
         $response = curl_exec($ch);
