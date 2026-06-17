@@ -62,6 +62,9 @@
                             <span class="badge-discount">-<?= round((1 - $p['discount_price'] / $p['price']) * 100) ?>%</span>
                         <?php endif; ?>
                         <?php if (is_logged_in()): ?>
+                            <button class="btn-cart-add" onclick="event.stopPropagation(); addToCart(<?= $p['id'] ?>)" title="Tambah ke Keranjang">
+                                <i class="bi bi-cart-plus"></i>
+                            </button>
                             <button class="btn-wishlist" onclick="toggleWishlist(<?= $p['id'] ?>, this)">
                                 <i class="bi bi-heart"></i>
                             </button>
@@ -101,6 +104,11 @@
                     <div class="card product-card position-relative h-100">
                         <?php if ($p['discount_price'] > 0): ?>
                             <span class="badge-discount">-<?= round((1 - $p['discount_price'] / $p['price']) * 100) ?>%</span>
+                        <?php endif; ?>
+                        <?php if (is_logged_in()): ?>
+                            <button class="btn-cart-add" onclick="event.stopPropagation(); addToCart(<?= $p['id'] ?>)" title="Tambah ke Keranjang">
+                                <i class="bi bi-cart-plus"></i>
+                            </button>
                         <?php endif; ?>
                         <a href="<?= base_url('produk/' . $p['slug']) ?>" class="text-decoration-none">
                             <?php if ($p['main_image']): ?>

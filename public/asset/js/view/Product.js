@@ -31,7 +31,6 @@ function addToCart(productId) {
     { product_id: productId, quantity: $('#qty').val() },
     function (res) {
       if (res.status) {
-        showToast(res.message, 'success');
         updateCartBadge(res.data.cart_count);
       } else {
         showToast(res.message, 'error');

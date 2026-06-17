@@ -40,11 +40,9 @@
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="<?= base_url('cart') ?>">
                             <i class="bi bi-cart3"></i>
-                            <?php if (get_cart_count() > 0): ?>
-                                <span class="badge bg-danger rounded-pill position-absolute translate-middle" id="cartBadge" style="font-size: 0.65rem;">
-                                    <?= get_cart_count() ?>
-                                </span>
-                            <?php endif; ?>
+                            <span class="badge bg-danger rounded-pill position-absolute translate-middle" id="cartBadge" style="font-size: 0.65rem; <?= get_cart_count() > 0 ? '' : 'display:none;' ?>">
+                                <?= get_cart_count() ?>
+                            </span>
                         </a>
                     </li>
 
@@ -150,9 +148,7 @@
                 <li class="nav-item">
                     <a class="nav-link px-3 py-2" href="<?= base_url('cart') ?>">
                         <i class="bi bi-cart3 me-2"></i>Keranjang
-                        <?php if (get_cart_count() > 0): ?>
-                            <span class="badge bg-danger rounded-pill" id="cartBadgeMobile" style="margin-left: 5px; transform: translateY(2px);"><?= get_cart_count() ?></span>
-                        <?php endif; ?>
+                        <span class="badge bg-danger rounded-pill" id="cartBadgeMobile" style="margin-left: 5px; transform: translateY(2px); <?= get_cart_count() > 0 ? '' : 'display:none;' ?>"><?= get_cart_count() ?></span>
                     </a>
                 </li>
                 <li class="nav-item">

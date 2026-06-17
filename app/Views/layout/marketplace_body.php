@@ -64,7 +64,7 @@
 
         .btn-wishlist {
             position: absolute;
-            top: 10px;
+            top: 52px;
             right: 10px;
             background: white;
             border: none;
@@ -77,6 +77,31 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .btn-cart-add {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 2;
+        }
+
+        .btn-cart-add:hover {
+            background: #0b5ed7;
+            transform: scale(1.1);
         }
 
         .btn-wishlist:hover,
@@ -280,7 +305,30 @@
         }
 
         function updateCartBadge(count) {
-            $('#cartBadge').text(count);
+            if (count > 0) {
+                $('#cartBadge').text(count).show();
+                $('#cartBadgeMobile').text(count).show();
+            } else {
+                $('#cartBadge').hide();
+                $('#cartBadgeMobile').hide();
+            }
+        }
+
+        function addToCart(productId, qty) {
+            qty = qty || 1;
+            $.post(
+                base_url + 'cart/add',
+                { product_id: productId, quantity: qty },
+                function (res) {
+                    if (!res.status && typeof showToast === 'function') {
+                        showToast(res.message, 'error');
+                    }
+                    if (res.status && res.data && res.data.cart_count) {
+                        updateCartBadge(res.data.cart_count);
+                    }
+                },
+                'json'
+            );
         }
 
         function formatRupiah(angka) {
