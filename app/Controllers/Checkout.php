@@ -175,6 +175,7 @@ class Checkout extends BaseController
             'callbacks' => [
                 'finish' => base_url('order/' . $orderId),
             ],
+            'notification_url' => base_url('payment/notification'),
         ];
 
         $snapResult = $this->midtransService->createSnapToken($snapParams);
