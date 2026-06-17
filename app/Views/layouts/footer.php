@@ -6,13 +6,7 @@
                 <h5 class="text-white"><i class="bi bi-shop"></i> Morowalimart</h5>
                 <p class="small">Platform marketplace terpercaya. Belanja online mudah, aman, dan nyaman.</p>
             </div>
-            <div class="col-md-2 mb-4">
-                <h6 class="text-white">Belanja</h6>
-                <ul class="list-unstyled small">
-                    <li><a href="<?= base_url('produk') ?>">Semua Produk</a></li>
-                    <li><a href="<?= base_url('search') ?>">Pencarian</a></li>
-                </ul>
-            </div>
+
             <div class="col-md-3 mb-4">
                 <h6 class="text-white">Bantuan</h6>
                 <ul class="list-unstyled small">

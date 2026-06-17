@@ -84,7 +84,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: var(--primary);
+            background: var(--danger);
             color: white;
             border: none;
             border-radius: 50%;
@@ -100,7 +100,7 @@
         }
 
         .btn-cart-add:hover {
-            background: #0b5ed7;
+            background: #b02a37;
             transform: scale(1.1);
         }
 
@@ -154,69 +154,155 @@
             font-size: 2rem;
         }
 
-        footer {
-            background: #343a40;
-            color: #adb5bd;
-            padding: 40px 0 20px;
-            margin-top: 60px;
+        /* Sidebar link hover */
+        .sidebar-link {
+            color: #333;
+            border-radius: 0;
+            transition: background-color 0.15s, color 0.15s;
         }
 
-        footer a {
-            color: #adb5bd;
-            text-decoration: none;
+        .sidebar-link:hover {
+            background-color: #f0f4ff;
+            color: var(--primary);
         }
 
-        footer a:hover {
-            color: white;
+        .sidebar-link.text-danger:hover {
+            background-color: #fff0f0;
+            color: #b02a37 !important;
+        }
+
+        /* Desktop Sidebar */
+        .sidebar-desktop {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 260px;
+            height: calc(100vh - 70px);
+            background: #fff;
+            border-right: 1px solid #dee2e6;
+            z-index: 1020;
+            overflow: hidden;
+        }
+
+        .sidebar-desktop .sidebar-link {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 992px) {
+            body.sidebar-visible #page-content {
+                margin-left: 260px;
+            }
         }
     </style>
     <?= $this->renderSection('styles') ?>
 </head>
 
-<body>
+<body class="<?= is_logged_in() ? 'sidebar-visible' : '' ?>">
 
     <?= $this->include('layouts/navbar') ?>
 
-    <?= $this->renderSection('content') ?>
+    <?php if (is_logged_in()): ?>
+        <?php $user = get_user(); ?>
+        <!-- Desktop Sidebar -->
+        <aside class="sidebar-desktop d-none d-lg-flex flex-column">
+            <!-- User Info -->
+            <div class="sidebar-user px-3 py-3 border-bottom text-center">
+                <?php if (!empty($user['photo'])): ?>
+                    <img src="<?= base_url($user['photo']) ?>" class="rounded-circle mb-1" width="56" height="56" alt="Avatar" style="object-fit:cover;">
+                <?php else: ?>
+                    <div class="mb-1"><i class="bi bi-person-circle fs-1"></i></div>
+                <?php endif; ?>
+                <div class="fw-semibold small"><?= esc($user['name']) ?></div>
+                <small class="text-muted"><?= esc($user['email'] ?? '') ?></small>
+            </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="text-white"><i class="bi bi-shop"></i> Morowalimart</h5>
-                    <p class="small">Platform marketplace terpercaya. Belanja online mudah, aman, dan nyaman.</p>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h6 class="text-white">Belanja</h6>
-                    <ul class="list-unstyled small">
-                        <li><a href="<?= base_url('produk') ?>">Semua Produk</a></li>
-                        <li><a href="<?= base_url('search') ?>">Pencarian</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h6 class="text-white">Bantuan</h6>
-                    <ul class="list-unstyled small">
-                        <li><a href="#">Cara Belanja</a></li>
-                        <li><a href="#">Cara Jual</a></li>
-                        <li><a href="#">Kebijakan Privasi</a></li>
-                        <li><a href="#">Syarat & Ketentuan</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h6 class="text-white">Hubungi Kami</h6>
-                    <ul class="list-unstyled small">
-                        <li><i class="bi bi-envelope me-2"></i>support@marketplace.com</li>
-                        <li><i class="bi bi-telephone me-2"></i>0800-1234-5678</li>
-                    </ul>
+            <nav class="flex-grow-1 overflow-auto">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <small class="px-3 py-1 text-uppercase text-muted fw-bold d-block">Akun Saya</small>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-link" href="<?= base_url('profile') ?>"><i class="bi bi-person me-2"></i>Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-link" href="<?= base_url('cart') ?>">
+                            <i class="bi bi-cart3 me-2"></i>Keranjang
+                            <span class="badge bg-danger rounded-pill float-end" id="cartBadgeSidebar" style="<?= get_cart_count() > 0 ? '' : 'display:none;' ?>"><?= get_cart_count() ?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-link" href="<?= base_url('wishlist') ?>"><i class="bi bi-heart me-2"></i>Wishlist</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-link" href="<?= base_url('order') ?>"><i class="bi bi-bag me-2"></i>Pesanan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-link" href="<?= base_url('address') ?>"><i class="bi bi-geo-alt me-2"></i>Alamat</a>
+                    </li>
+
+                    <?php if (is_seller()): ?>
+                        <li class="nav-item mt-2">
+                            <small class="px-3 py-1 text-uppercase text-muted fw-bold d-block">Seller</small>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="<?= base_url('seller/dashboard') ?>"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (is_admin()): ?>
+                        <li class="nav-item mt-2">
+                            <small class="px-3 py-1 text-uppercase text-muted fw-bold d-block">Admin</small>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="<?= base_url('admin/dashboard') ?>"><i class="bi bi-shield-lock me-2"></i>Panel Admin</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (!is_seller() && !is_admin()): ?>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="<?= base_url('seller/toko') ?>"><i class="bi bi-shop-window me-2"></i>Buka Toko</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
+
+            <div class="border-top px-3 py-2 sidebar-footer-links">
+                <div class="d-flex flex-column gap-1">
+
+                    <div class="small">
+                        <a href="#" class="text-decoration-none text-muted"><i class="bi bi-question-circle me-1"></i>Cara Belanja</a>
+                        <span class="text-muted mx-1">|</span>
+                        <a href="#" class="text-decoration-none text-muted"><i class="bi bi-shop me-1"></i>Cara Jual</a>
+                    </div>
+                    <div class="small">
+                        <a href="#" class="text-decoration-none text-muted"><i class="bi bi-shield-check me-1"></i>Privasi</a>
+                        <span class="text-muted mx-1">|</span>
+                        <a href="#" class="text-decoration-none text-muted"><i class="bi bi-file-text me-1"></i>Syarat</a>
+                    </div>
+                    <hr class="my-1">
+                    <div class="small text-muted">
+                        <i class="bi bi-envelope me-1"></i>support@morowalimart.com
+                    </div>
+                    <div class="small text-muted">
+                        <i class="bi bi-telephone me-1"></i>0800-1234-5678
+                    </div>
                 </div>
             </div>
-            <hr class="border-secondary">
-            <div class="text-center small">
-                &copy; <?= date('Y') ?> Marketplace Multi Vendor. All rights reserved.
+            <div class="border-top p-2 text-center small text-muted">
+                &copy; <?= date('Y') ?> Morowalimart
             </div>
-        </div>
-    </footer>
+            <div class="border-top p-2">
+                <a class="nav-link sidebar-link text-danger px-2 py-1" href="<?= base_url('logout') ?>">
+                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </a>
+            </div>
+        </aside>
+    <?php endif; ?>
+
+    <div id="page-content">
+        <?= $this->renderSection('content') ?>
+    </div><!-- /page-content -->
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -308,9 +394,11 @@
             if (count > 0) {
                 $('#cartBadge').text(count).show();
                 $('#cartBadgeMobile').text(count).show();
+                $('#cartBadgeSidebar').text(count).show();
             } else {
                 $('#cartBadge').hide();
                 $('#cartBadgeMobile').hide();
+                $('#cartBadgeSidebar').hide();
             }
         }
 
