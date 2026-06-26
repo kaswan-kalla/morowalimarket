@@ -109,7 +109,17 @@
         <!-- Table -->
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="fw-bold mb-0"><i class="bi bi-table me-2"></i>Data Responden Terbaru</h6>
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-table me-2"></i>Data Responden Terbaru</h6>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="form-label mb-0 small text-nowrap">Filter Investasi:</label>
+                        <select id="filterInvestasi" class="form-select form-select-sm" style="width:auto">
+                            <option value="">Semua</option>
+                            <option value="Siap Investasi">Siap Investasi</option>
+                            <option value="Belum Siap">Belum Siap</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -151,7 +161,8 @@
     let chartInvestasi = null;
 
     function refreshData() {
-        $.get('<?= base_url('admin/survey/data') ?>', function(res) {
+        var filter = $('#filterInvestasi').val();
+        $.get('<?= base_url('admin/survey/data') ?>' + (filter ? '?siap_investasi=' + encodeURIComponent(filter) : ''), function(res) {
             console.log('Survey API response:', res);
             if (!res.status) return;
 
@@ -377,7 +388,10 @@
         $('#investasiLegend').html(html);
     }
 
-    $(document).ready(refreshData);
+    $(document).ready(function() {
+        refreshData();
+        $('#filterInvestasi').on('change', refreshData);
+    });
 </script>
 <?= $this->endSection() ?>
 <?= $this->include('layouts/scripts') ?>

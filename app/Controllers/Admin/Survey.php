@@ -20,33 +20,45 @@ class Survey extends BaseController
         $model = new SurveyModel();
         $db = \Config\Database::connect();
 
+        // Filter
+        $filterInvestasi = $this->request->getGet('siap_investasi') ?: '';
+        $where = '';
+        $bind  = [];
+        if ($filterInvestasi !== '') {
+            $where = 'WHERE siap_investasi = :investasi:';
+            $bind  = ['investasi' => $filterInvestasi];
+        }
+
         // Total responden
         $total = $model->countAllResults();
 
         // Per desa
-        $query = $db->query("SELECT alamat, COUNT(*) as jumlah FROM surveys GROUP BY alamat ORDER BY jumlah DESC");
+        $query = $db->query("SELECT alamat, COUNT(*) as jumlah FROM surveys $where GROUP BY alamat ORDER BY jumlah DESC", $bind);
         $perDesa = $query->getResultArray();
 
         // Status menikah
-        $query = $db->query("SELECT status_menikah, COUNT(*) as jumlah FROM surveys GROUP BY status_menikah");
+        $query = $db->query("SELECT status_menikah, COUNT(*) as jumlah FROM surveys $where GROUP BY status_menikah", $bind);
         $perStatus = $query->getResultArray();
 
         // Rentang pengeluaran
-        $query = $db->query("SELECT pengeluaran_perbulan, COUNT(*) as jumlah FROM surveys GROUP BY pengeluaran_perbulan ORDER BY FIELD(pengeluaran_perbulan, 'Dibawah 1jt','1jt - 2jt','2jt - 3jt','Diatas 3jt')");
+        $query = $db->query("SELECT pengeluaran_perbulan, COUNT(*) as jumlah FROM surveys $where GROUP BY pengeluaran_perbulan ORDER BY FIELD(pengeluaran_perbulan, 'Dibawah 1jt','1jt - 2jt','2jt - 3jt','Diatas 3jt')", $bind);
         $perPengeluaran = $query->getResultArray();
 
         // Preferensi belanja
-        $query = $db->query("SELECT preferensi_belanja, COUNT(*) as jumlah FROM surveys GROUP BY preferensi_belanja");
+        $query = $db->query("SELECT preferensi_belanja, COUNT(*) as jumlah FROM surveys $where GROUP BY preferensi_belanja", $bind);
         $perPreferensi = $query->getResultArray();
 
         // Siap investasi
-        $query = $db->query("SELECT siap_investasi, COUNT(*) as jumlah FROM surveys GROUP BY siap_investasi");
+        $query = $db->query("SELECT siap_investasi, COUNT(*) as jumlah FROM surveys $where GROUP BY siap_investasi", $bind);
         $perInvestasi = $query->getResultArray();
 
-        // Siap member
+        // Siap member (selalu hitung global)
         $siapMember = $model->where('siap_member', 1)->countAllResults();
 
         // Data terbaru
+        if ($filterInvestasi !== '') {
+            $model->where('siap_investasi', $filterInvestasi);
+        }
         $latest = $model->orderBy('created_at', 'DESC')->findAll(50);
 
         return $this->response->setJSON([
