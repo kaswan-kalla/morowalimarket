@@ -302,12 +302,18 @@
             type: 'pie',
             data: {
                 labels: labels,
-                datasets: [{ data: data, backgroundColor: ['#0d6efd','#dc3545','#6c757d'].slice(0, labels.length) }]
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#0d6efd', '#dc3545', '#6c757d'].slice(0, labels.length)
+                }]
             },
             options: {
-                responsive: true, maintainAspectRatio: true,
+                responsive: true,
+                maintainAspectRatio: true,
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        display: false
+                    },
                     tooltip: {
                         callbacks: {
                             label: function(ctx) {
@@ -323,7 +329,7 @@
         let html = '<div class="row g-1">';
         labels.forEach(function(lbl, i) {
             let pct = ((data[i] / total) * 100).toFixed(1);
-            let bg = ['#0d6efd','#dc3545','#6c757d'][i];
+            let bg = ['#0d6efd', '#dc3545', '#6c757d'][i];
             html += '<div class="col-6"><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:' + bg + '"></span> ' + lbl + ': <strong>' + data[i] + '</strong> (' + pct + '%)</div>';
         });
         html += '</div>';
@@ -337,12 +343,18 @@
             type: 'pie',
             data: {
                 labels: labels,
-                datasets: [{ data: data, backgroundColor: ['#198754','#ffc107','#6c757d'].slice(0, labels.length) }]
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#198754', '#ffc107', '#6c757d'].slice(0, labels.length)
+                }]
             },
             options: {
-                responsive: true, maintainAspectRatio: true,
+                responsive: true,
+                maintainAspectRatio: true,
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        display: false
+                    },
                     tooltip: {
                         callbacks: {
                             label: function(ctx) {
@@ -358,7 +370,7 @@
         let html = '<div class="row g-1">';
         labels.forEach(function(lbl, i) {
             let pct = ((data[i] / total) * 100).toFixed(1);
-            let bg = ['#198754','#ffc107','#6c757d'][i];
+            let bg = ['#198754', '#ffc107', '#6c757d'][i];
             html += '<div class="col-6"><span class="d-inline-block rounded-circle me-1" style="width:10px;height:10px;background:' + bg + '"></span> ' + lbl + ': <strong>' + data[i] + '</strong> (' + pct + '%)</div>';
         });
         html += '</div>';
